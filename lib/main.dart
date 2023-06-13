@@ -1,6 +1,7 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'Layout/LoginPage.dart';
 
 void main(List<String> args) {
   runApp(MyApp());
@@ -49,7 +50,7 @@ class MyApp extends StatelessWidget {
           ),
           // Ganti dengan path gambar splash screen Anda
           nextScreen:
-              Home(), // Ganti dengan widget berikutnya setelah splash screen selesai
+              LoginPage(), // Ganti dengan widget berikutnya setelah splash screen selesai
           splashTransition: SplashTransition.fadeTransition,
           backgroundColor: Color.fromRGBO(33, 64, 100, 1),
           duration: 3000, // Durasi tampilan splash screen dalam milidetik,

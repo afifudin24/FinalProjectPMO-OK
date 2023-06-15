@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:google_fonts/google_fonts.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -42,6 +43,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Container(
+            width: 200,
+            margin: EdgeInsets.all(10),
+            padding: EdgeInsets.all(15),
+            child: Center(
+              child: Text(
+                "Selamat Datang",
+                style: GoogleFonts.armata(fontSize: 15, color: Colors.white),
+              ),
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Color.fromRGBO(33, 64, 100, 1),
+            ),
+          ),
           Container(
             alignment: Alignment.center,
             transformAlignment: Alignment.center,

@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,6 +14,17 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool visibilitas = false;
   var statusLog = " ";
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  String _errorMessage = '';
+  String gagal = " ";
+  String keteranganGagal = " ";
+
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,23 +85,133 @@ class _LoginPageState extends State<LoginPage> {
             ),
             SizedBox(height: 16.0),
             ElevatedButton(
-              onPressed: () {
-                print('oke');
-              },
+              onPressed: _login,
               child: Text('Login'),
             ),
             SizedBox(
               height: 10,
             ),
-            GestureDetector(
-                onTap: () {
-                  print("oke");
-                },
-                child: Text("Belum punya akun?"))
+            GestureDetector(onTap: _login, child: Text("Belum punya akun?"))
           ],
         ),
       ),
     );
-    ;
+  }
+
+  //simpan status login
+
+  Future<void> _saveLoginStatus(bool isLoggedIn) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isLoggedIn', isLoggedIn);
+  }
+
+  //validasi Login
+  Future<bool> _performLoginValidation() async {
+    // Lakukan validasi login sesuai dengan kebutuhan aplikasi Anda
+    // Misalnya, periksa username dan password dengan panggilan API atau dalam basis data
+    // String email = _usernameController.text;
+    // String password = _passwordController.text;
+
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: _usernameController.text,
+        password: _passwordController.text,
+      );
+      User? user = userCredential.user;
+      return true;
+      // Login berhasil, lakukan tindakan yang diperlukan setelah login sukses
+    } on FirebaseAuthException catch (e) {
+      print(e.code);
+      if (e.message.toString() ==
+          'An unknown error occurred: FirebaseError: Firebase: The email address is badly formatted. (auth/invalid-email).') {
+        setState(() {
+          _errorMessage = 'User not found';
+          gagal = "Email belum terdaftar";
+          keteranganGagal = "Coba pastikan email benar";
+        });
+      } else if (e.message.toString() ==
+          'An unknown error occurred: FirebaseError: Firebase: The password is invalid or the user does not have a password. (auth/wrong-password).') {
+        setState(() {
+          gagal = "Password Salah";
+          keteranganGagal = "Cek password kembali";
+          _errorMessage = 'Wrong password';
+        });
+      } else if (_usernameController.text == " ") {
+        statusLog = "Username Wajib Diisi";
+        visibilitas = true;
+      }
+      return false;
+    }
+  }
+
+  //fungsi login
+
+  Future<void> _login() async {
+    // Simulasikan proses validasi login
+    if (_usernameController.text != "" && _passwordController.text != "") {
+      setState(() {
+        visibilitas = false;
+      });
+      bool isLoggedIn = await _performLoginValidation();
+      if (isLoggedIn) {
+        // Simpan status login jika berhasil
+        await _saveLoginStatus(true);
+        // Navigasi ke halaman beranda
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Login Berhasil"),
+              content: Text("Mantap Kak"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(gagal),
+              content: Text(keteranganGagal),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } else if (_usernameController.text == "" &&
+        _passwordController.text != "") {
+      setState(() {
+        statusLog = "Username Wajib Diisi";
+        visibilitas = true;
+      });
+    } else if (_passwordController.text == "" &&
+        _usernameController.text != "") {
+      setState(() {
+        statusLog = "Password Wajib Diisi";
+        visibilitas = true;
+      });
+    } else if (_usernameController.text == "" &&
+        _passwordController.text == "") {
+      setState(() {
+        statusLog = "Username & Password Wajib Diisi";
+        visibilitas = true;
+      });
+    }
   }
 }

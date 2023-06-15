@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "404396896334",
+    "firebase_url": "https://kasir-euy-default-rtdb.firebaseio.com",
+    "project_id": "kasir-euy",
+    "storage_bucket": "kasir-euy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:404396896334:android:b07d507815000eea21931f",
+        "android_client_info": {
+          "package_name": "com.example.kasir_euy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "404396896334-ulrhtrvn8cjj2c8bknl2vucd4070vk32.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNaUQ6REJ99KgczPNLG462G5-pvMofIhw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "404396896334-ulrhtrvn8cjj2c8bknl2vucd4070vk32.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "404396896334-eqbdinu02k6f515u62tsnomtdfmllmhq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.kasirEuy"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

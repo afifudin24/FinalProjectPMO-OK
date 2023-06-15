@@ -70,7 +70,9 @@ class DefaultFirebaseOptions {
     projectId: 'kasir-euy',
     databaseURL: 'https://kasir-euy-default-rtdb.firebaseio.com',
     storageBucket: 'kasir-euy.appspot.com',
+
     iosClientId: '404396896334-eqbdinu02k6f515u62tsnomtdfmllmhq.apps.googleusercontent.com',
+
     iosBundleId: 'com.example.kasirEuy',
   );
 
@@ -81,7 +83,9 @@ class DefaultFirebaseOptions {
     projectId: 'kasir-euy',
     databaseURL: 'https://kasir-euy-default-rtdb.firebaseio.com',
     storageBucket: 'kasir-euy.appspot.com',
+
     iosClientId: '404396896334-eqbdinu02k6f515u62tsnomtdfmllmhq.apps.googleusercontent.com',
+
     iosBundleId: 'com.example.kasirEuy',
   );
 }

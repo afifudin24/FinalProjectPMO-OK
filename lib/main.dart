@@ -5,6 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kasir_euy/Layout/HomeScreen.dart';
 import 'package:kasir_euy/Layout/Registerpage.dart';
@@ -23,6 +25,7 @@ Future<void> saveLoginStatus(bool isLoggedIn) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setBool('isLoggedIn', isLoggedIn);
 }
+
 
 Future<bool> checkLoginStatus() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -64,6 +67,7 @@ void main(List<String> args) async {
   bool isLoggedIn = await checkLoginStatus();
 
   runApp(MyApp(isLoggedIn: isLoggedIn));
+
 }
 
 class MyApp extends StatelessWidget {

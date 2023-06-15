@@ -1,11 +1,15 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kasir_euy/Layout/HomeScreen.dart';
 import 'package:kasir_euy/Layout/Registerpage.dart';
 import 'Layout/LoginPage.dart';
 
-void main(List<String> args) {
+void main(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 

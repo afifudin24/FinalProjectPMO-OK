@@ -8,6 +8,7 @@ class TokoService {
 
   Future<List<Toko>> getItems() async {
     List<Toko> tokoList = [];
+
     QuerySnapshot snapshot = await tokoCollection.get();
 
     snapshot.docs.forEach((doc) {
@@ -17,8 +18,15 @@ class TokoService {
     return tokoList;
   }
 
+  Future<List<String>> getDocumentIds() async {
+    final querySnapshot = await tokoCollection.get();
+    final documentIds = querySnapshot.docs.map((doc) => doc.id).toList();
+    return documentIds;
+  }
+
   Future<void> addItem(Toko item) {
-    return tokoCollection.doc(item.idtoko).set(item.toMap());
+    String randomId = FirebaseFirestore.instance.collection('toko').doc().id;
+    return tokoCollection.doc(randomId).set(item.toMap());
   }
 
   Future<void> updateItem(Toko item) {

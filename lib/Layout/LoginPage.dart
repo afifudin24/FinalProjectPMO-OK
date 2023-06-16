@@ -174,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
             );
           },
         );
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/cek');
       } else {
         showDialog(
           context: context,

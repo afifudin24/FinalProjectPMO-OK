@@ -10,6 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kasir_euy/Layout/HomeScreen.dart';
 import 'package:kasir_euy/Layout/Registerpage.dart';
+import 'package:kasir_euy/Layout/TokoList.dart';
 import 'package:kasir_euy/Layout/TransaksiPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Layout/LoginPage.dart';
@@ -26,7 +27,6 @@ Future<void> saveLoginStatus(bool isLoggedIn) async {
   prefs.setBool('isLoggedIn', isLoggedIn);
 }
 
-
 Future<bool> checkLoginStatus() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
@@ -41,7 +41,7 @@ Future<void> fetchUsers() async {
         .get();
     if (querySnapshot.docs.isNotEmpty) {
       // Data ditemukan dalam koleksi
-    
+
       print("ok");
     } else if (querySnapshot.docs.isNotEmpty) {
       print("ok");
@@ -67,7 +67,6 @@ void main(List<String> args) async {
   bool isLoggedIn = await checkLoginStatus();
 
   runApp(MyApp(isLoggedIn: isLoggedIn));
-
 }
 
 class MyApp extends StatelessWidget {
@@ -78,49 +77,51 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: AnimatedSplashScreen(
-          splashIconSize: MediaQuery.of(context).size.height,
-          splash: Scaffold(
-            resizeToAvoidBottomInset: false,
-            extendBody: true,
-            backgroundColor: Colors.transparent,
-            body: Center(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Image.asset(
-                      "assets/image/logo.png",
-                      height: 200,
-                      width: 200,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      "KASIR-EUY",
-                      style: GoogleFonts.montserrat(
-                          fontSize: 24, color: Colors.white),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    CircularProgressIndicator(
-                      color: Colors.grey,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          // Ganti dengan path gambar splash screen Anda
-          nextScreen: Tentukan(
-            isLoggedIn: isLoggedIn,
-          ), // Ganti dengan widget berikutnya setelah splash screen selesai
-          splashTransition: SplashTransition.fadeTransition,
-          backgroundColor: Color.fromRGBO(33, 64, 100, 1),
-          duration: 3000, // Durasi tampilan splash screen dalam milidetik,
-        ));
+      debugShowCheckedModeBanner: false,
+      home: CrudToko(),
+      // home: AnimatedSplashScreen(
+      //   splashIconSize: MediaQuery.of(context).size.height,
+      //   splash: Scaffold(
+      //     resizeToAvoidBottomInset: false,
+      //     extendBody: true,
+      //     backgroundColor: Colors.transparent,
+      //     body: Center(
+      //       child: SingleChildScrollView(
+      //         child: Column(
+      //           children: [
+      //             Image.asset(
+      //               "assets/image/logo.png",
+      //               height: 200,
+      //               width: 200,
+      //             ),
+      //             SizedBox(
+      //               height: 20,
+      //             ),
+      //             Text(
+      //               "KASIR-EUY",
+      //               style: GoogleFonts.montserrat(
+      //                   fontSize: 24, color: Colors.white),
+      //             ),
+      //             SizedBox(
+      //               height: 20,
+      //             ),
+      //             CircularProgressIndicator(
+      //               color: Colors.grey,
+      //             ),
+      //           ],
+      //         ),
+      //       ),
+      //     ),
+      //   ),
+      //   // Ganti dengan path gambar splash screen Anda
+      //   nextScreen: Tentukan(
+      //     isLoggedIn: isLoggedIn,
+      //   ), // Ganti dengan widget berikutnya setelah splash screen selesai
+      //   splashTransition: SplashTransition.fadeTransition,
+      //   backgroundColor: Color.fromRGBO(33, 64, 100, 1),
+      //   duration: 3000, // Durasi tampilan splash screen dalam milidetik,
+      // ));
+    );
   }
 }
 

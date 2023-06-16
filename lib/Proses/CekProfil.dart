@@ -28,6 +28,7 @@ class _CekState extends State<Cek> {
           .collection('toko')
           .where('email', isEqualTo: currentUser!.email)
           .get();
+
       if (querySnapshot.docs.isNotEmpty) {
         // Data ditemukan dalam koleksi
         Navigator.pushReplacementNamed(context, '/home');

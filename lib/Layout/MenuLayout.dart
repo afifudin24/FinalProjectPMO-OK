@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 
-class MenuScreen extends StatefulWidget {
-  const MenuScreen({super.key});
-
-  @override
-  State<MenuScreen> createState() => _MenuScreenState();
-}
-
-class _MenuScreenState extends State<MenuScreen> {
+class KasirMenuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Menu KasirEuy'),
+      ),
+      body: GridView.count(
         crossAxisCount: 2,
         children: [
           _buildMenuItem(Icons.inventory, 'Stok Barang'),
@@ -18,14 +15,11 @@ class _MenuScreenState extends State<MenuScreen> {
           _buildMenuItem(Icons.money, 'Donasi'),
           _buildMenuItem(Icons.stacked_line_chart, 'Laporan Penjualan'),
         ],
-      );
-    
+      ),
+    );
   }
 
- 
-}
-
- Widget _buildMenuItem(IconData iconData, String title) {
+  Widget _buildMenuItem(IconData iconData, String title) {
     return GestureDetector(
       onTap: () {
         // Tambahkan logika ketika item menu diklik
@@ -49,5 +43,11 @@ class _MenuScreenState extends State<MenuScreen> {
         ),
       ),
     );
-  
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: KasirMenuPage(),
+  ));
+}

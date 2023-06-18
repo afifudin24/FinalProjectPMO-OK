@@ -10,7 +10,7 @@ class MemberService {
     List<Member> memberList = [];
 
     QuerySnapshot snapshot = await memberCollection.get();
-
+    //ok
     snapshot.docs.forEach((doc) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       memberList.add(Member.fromMap(data));

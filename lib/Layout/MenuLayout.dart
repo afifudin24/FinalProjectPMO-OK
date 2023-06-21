@@ -1,29 +1,38 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
+import 'package:kasir_euy/Layout/BarangList.dart';
+import 'package:kasir_euy/Layout/TokoList.dart';
+import 'HomeScreen.dart';
 
 class KasirMenuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Menu KasirEuy'),
-      ),
-      body: GridView.count(
-        crossAxisCount: 2,
-        children: [
-          _buildMenuItem(Icons.inventory, 'Stok Barang'),
-          _buildMenuItem(Icons.person, 'Member'),
-          _buildMenuItem(Icons.money, 'Donasi'),
-          _buildMenuItem(Icons.stacked_line_chart, 'Laporan Penjualan'),
-        ],
-      ),
+    void pindah() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Kocak()),
+      );
+    }
+
+    return GridView.count(
+      crossAxisCount: 2,
+      children: [
+        _buildMenuItem(Icons.inventory, 'Stok Barang', pindah),
+        _buildMenuItem(Icons.person, 'Member', '/login'),
+        _buildMenuItem(Icons.money, 'Donasi', '/home'),
+        _buildMenuItem(Icons.stacked_line_chart, 'Laporan Penjualan', '/home'),
+      ],
     );
   }
 
-  Widget _buildMenuItem(IconData iconData, String title) {
-    return GestureDetector(
+  Widget _buildMenuItem(IconData iconData, String title, VoidCallbackAction) {
+    return InkWell(
       onTap: () {
         // Tambahkan logika ketika item menu diklik
-        print('Menu $title diklik');
+
+        VoidCallbackAction();
+        print('ok');
       },
       child: Card(
         child: Column(
@@ -44,10 +53,4 @@ class KasirMenuPage extends StatelessWidget {
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: KasirMenuPage(),
-  ));
 }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:kasir_euy/Layout/MenuLayout.dart';
 import 'package:kasir_euy/Layout/ProfilPage.dart';
 import 'DashboardPage.dart';
 import 'MenuPage.dart';
 import 'TransaksiPage.dart';
+import '../main.dart';
 
-List menu = [DashboardScreen(), TransaksiScreen(), MenuScreen(), Profil()];
+List menu = [DashboardScreen(), TransaksiScreen(), KasirMenuPage(), Profil()];
 List visibilitasLeading = [false, false, false, true];
 List title = ["Dashboard", "Transaksi", "Menu", "Profil"];
 

@@ -6,10 +6,11 @@ class BarangService {
   final CollectionReference barangCollection =
       FirebaseFirestore.instance.collection('barang');
 
-  Future<List<Barang>> getItems() async {
+  Future<List<Barang>> getItems(String id) async {
     List<Barang> barangList = [];
 
-    QuerySnapshot snapshot = await barangCollection.get();
+    QuerySnapshot snapshot =
+        await barangCollection.where("idtoko", isEqualTo: id).get();
 
     snapshot.docs.forEach((doc) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
@@ -19,7 +20,8 @@ class BarangService {
   }
 
   Future<List<String>> getDocumentIds() async {
-    final querySnapshot = await barangCollection.get();
+    final querySnapshot =
+        await barangCollection.where("kdbarang", isEqualTo: "12wa").get();
     final documentIds = querySnapshot.docs.map((doc) => doc.id).toList();
     return documentIds;
   }
@@ -36,7 +38,4 @@ class BarangService {
   Future<void> deleteItem(String id) {
     return barangCollection.doc(id).delete();
   }
-
-
-  }
-
+}

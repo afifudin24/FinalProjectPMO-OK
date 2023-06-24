@@ -19,9 +19,28 @@ class BarangService {
     return barangList.toList();
   }
 
+  Future<List<Barang>> getData(String kd) async {
+    List<Barang> barangData = [];
+
+    QuerySnapshot snapshot =
+        await barangCollection.where("kdbarang", isEqualTo: kd).get();
+
+    snapshot.docs.forEach((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      barangData.add(Barang.fromMap(data));
+    });
+    return barangData.toList();
+  }
+
   Future<List<String>> getDocumentIds() async {
+    final querySnapshot = await barangCollection.get();
+    final documentIds = querySnapshot.docs.map((doc) => doc.id).toList();
+    return documentIds;
+  }
+
+  Future<List<String>> getDocumentDataIds(String kd) async {
     final querySnapshot =
-        await barangCollection.where("kdbarang", isEqualTo: "12wa").get();
+        await barangCollection.where("kdbarang", isEqualTo: kd).get();
     final documentIds = querySnapshot.docs.map((doc) => doc.id).toList();
     return documentIds;
   }
@@ -31,8 +50,8 @@ class BarangService {
     return barangCollection.doc(randomId).set(item.toMap());
   }
 
-  Future<void> updateItem(Barang item) {
-    return barangCollection.doc(item.kdbarang).update(item.toMap());
+  Future<void> updateItem(String id, item) {
+    return barangCollection.doc(id).update(item.toMap());
   }
 
   Future<void> deleteItem(String id) {

@@ -12,9 +12,11 @@ class Kocak extends StatefulWidget {
 
 class _KocakState extends State<Kocak> {
   BarangService controller = BarangService();
-  List<Barang> _barang = [];
   List<String> _id = [];
-
+  List<String> _iddata = [];
+  List<Barang> _barang = [];
+  List<Barang> _barangdata = [];
+  var idhapus = "";
   @override
   void initState() {
     super.initState();
@@ -31,6 +33,31 @@ class _KocakState extends State<Kocak> {
     });
   }
 
+  Future<void> _loadData(String kd) async {
+    List<Barang> barangPilih = await controller.getData(kd);
+    setState(() {
+      _barangdata = barangPilih;
+      conKodeBarang.text = _barangdata[0].kdbarang;
+      conHargaBarang.text = _barangdata[0].harga.toString();
+      conNamaBarang.text = _barangdata[0].namabarang;
+      conStokBarang.text = _barangdata[0].stok.toString();
+    });
+  }
+
+  Future<void> _loadViewData(String kd) async {
+    List<Barang> barangPilih = await controller.getData(kd);
+    setState(() {
+      _barangdata = barangPilih;
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(_barangdata[0].namabarang),
+            );
+          });
+    });
+  }
+
   Future<void> _loadID() async {
     List<String> documentIds = await controller.getDocumentIds();
     print('Document IDs: $documentIds');
@@ -40,7 +67,20 @@ class _KocakState extends State<Kocak> {
     print(_id);
   }
 
+  Future<void> _loadDataID(String kd) async {
+    List<String> documentpilihIds = await controller.getDocumentDataIds(kd);
+    print('Document IDs: $documentpilihIds');
+    setState(() {
+      _iddata = documentpilihIds;
+      var id = _iddata[0].toString();
+      idhapus = id;
+      conID.text = id;
+    });
+    print(_iddata);
+  }
+
   @override
+  TextEditingController conID = TextEditingController();
   TextEditingController conKodeBarang = TextEditingController();
   TextEditingController conNamaBarang = TextEditingController();
   TextEditingController conStokBarang = TextEditingController();
@@ -68,6 +108,7 @@ class _KocakState extends State<Kocak> {
                                   children: [
                                     TextField(
                                       decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.all(10),
                                           border: UnderlineInputBorder(),
                                           label: Text("Kode Barang")),
                                       controller: conKodeBarang,
@@ -133,7 +174,7 @@ class _KocakState extends State<Kocak> {
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
-                                    child: Text("OK"))
+                                    child: Text("Tutup"))
                               ],
                             );
                           });
@@ -179,18 +220,180 @@ class _KocakState extends State<Kocak> {
                               DataCell(Text(_barang[index].namabarang)),
                               DataCell(Text(_barang[index].stok.toString())),
                               DataCell(Text(_barang[index].harga.toString())),
+
+                              // DataCell(Text(_id[index].toString())),
                               DataCell(Row(
                                 children: [
                                   IconButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        _loadViewData(_barang[index].kdbarang);
+                                      },
                                       color: Colors.amber,
                                       icon: Icon(Icons.visibility)),
                                   IconButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        _loadData(_barang[index].kdbarang);
+
+                                        _loadDataID(_barang[index].kdbarang)
+                                            .toString();
+
+                                        // print(_barangdata[0].kdbarang);
+
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text("Edit Barang"),
+                                              content: Container(
+                                                child: Column(
+                                                  children: [
+                                                    Visibility(
+                                                      visible: false,
+                                                      child: TextField(
+                                                        decoration: InputDecoration(
+                                                            contentPadding:
+                                                                EdgeInsets.all(
+                                                                    10),
+                                                            border:
+                                                                UnderlineInputBorder(),
+                                                            label: Text(
+                                                                "Kode Barang")),
+                                                        controller: conID,
+                                                      ),
+                                                    ),
+                                                    TextField(
+                                                      decoration: InputDecoration(
+                                                          contentPadding:
+                                                              EdgeInsets.all(
+                                                                  10),
+                                                          border:
+                                                              UnderlineInputBorder(),
+                                                          label: Text(
+                                                              "Kode Barang")),
+                                                      controller: conKodeBarang,
+                                                    ),
+                                                    SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    TextField(
+                                                      decoration: InputDecoration(
+                                                          border:
+                                                              UnderlineInputBorder(),
+                                                          label: Text(
+                                                              "Nama Barang")),
+                                                      controller: conNamaBarang,
+                                                    ),
+                                                    SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    TextField(
+                                                      decoration: InputDecoration(
+                                                          border:
+                                                              UnderlineInputBorder(),
+                                                          label: Text(
+                                                              "Harga Barang")),
+                                                      controller:
+                                                          conHargaBarang,
+                                                    ),
+                                                    SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    TextField(
+                                                      decoration: InputDecoration(
+                                                          border:
+                                                              UnderlineInputBorder(),
+                                                          label: Text(
+                                                              "Stok Barang")),
+                                                      controller: conStokBarang,
+                                                    ),
+                                                    SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    ElevatedButton(
+                                                        onPressed: () {
+                                                          var kdbarang =
+                                                              conKodeBarang
+                                                                  .text;
+                                                          var namabarang =
+                                                              conNamaBarang
+                                                                  .text;
+                                                          int hargabarang =
+                                                              int.parse(
+                                                                  conHargaBarang
+                                                                      .text);
+                                                          int stokbarang =
+                                                              int.parse(
+                                                                  conStokBarang
+                                                                      .text);
+
+                                                          setState(() {
+                                                            Barang newItem = Barang(
+                                                                idtoko: '546',
+                                                                kdbarang:
+                                                                    kdbarang,
+                                                                namabarang:
+                                                                    namabarang,
+                                                                stok:
+                                                                    stokbarang,
+                                                                harga:
+                                                                    hargabarang);
+                                                            controller
+                                                                .updateItem(
+                                                                    conID.text,
+                                                                    newItem);
+
+                                                            _loadUsers();
+                                                            refreshPage();
+                                                          });
+                                                        },
+                                                        child: Text(
+                                                            "Update Barang"))
+                                                  ],
+                                                ),
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text("Tutup"))
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
                                       color: Colors.green,
                                       icon: Icon(Icons.edit)),
                                   IconButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text("Konfirmasi"),
+                                              content:
+                                                  Text("Yakin menghapus data?"),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    child: Text("Batal")),
+                                                TextButton(
+                                                    onPressed: () {
+                                                      controller.deleteItem(
+                                                          _id[index]);
+
+                                                      _loadUsers();
+                                                      refreshPage();
+                                                    },
+                                                    child: Text("Hapus")),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
                                       color: Colors.red,
                                       icon: Icon(Icons.delete))
                                 ],

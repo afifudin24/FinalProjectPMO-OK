@@ -1,9 +1,5 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:kasir_euy/Layout/BarangList.dart';
-import 'package:kasir_euy/Layout/TokoList.dart';
-import 'HomeScreen.dart';
 
 class KasirMenuPage extends StatelessWidget {
   @override

@@ -63,7 +63,10 @@ class _CrudTokoState extends State<CrudToko> {
                 email: 'Itemoojjlk 1hgjh',
                 namatoko: 'Deslcr;kkiptjhgion 1',
                 mottotoko: 'ok',
-                status: 0);
+                status: 0,
+                adminToko: "Afif",
+                urlImage:
+                    "https://tse2.mm.bing.net/th?id=OIP.4gkSTMRl_8DsEquU0WTELgHaE8&pid=Api&P=0&h=180");
             controller.addItem(newItem);
             print("okbng");
             _loadUsers();

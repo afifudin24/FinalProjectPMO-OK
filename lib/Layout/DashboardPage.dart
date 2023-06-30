@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kasir_euy/Layout/pageview.dart';
+
+import '../Class/TokoClass.dart';
+import '../ClassService.dart/TokoService.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -9,6 +13,25 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+   TokoService controller = TokoService();
+  var namaToko = "";
+  var namaAdmin = " ";
+  @override
+  void initState() {
+    super.initState();
+    _loadUsers();
+    
+    print("OK");
+  }
+
+  Future<void> _loadUsers() async {
+    print("lah");
+    List<Toko> tokos = await controller.getDataItems("123");
+    setState(() {
+      namaAdmin = tokos[0].adminToko;
+      print(tokos[0].adminToko);
+    });
+  }
   List<charts.Series<SalesData, String>> _createSampleData() {
     final data = [
       SalesData('Jan', 30),
@@ -39,79 +62,116 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 200,
-            margin: EdgeInsets.all(10),
-            padding: EdgeInsets.all(15),
-            child: Center(
-              child: Text(
-                "Selamat Datang",
-                style: GoogleFonts.armata(fontSize: 15, color: Colors.white),
+      scrollDirection: Axis.vertical,
+      child: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+         
+            Container(
+              width: double.infinity,
+              height: 200,
+              margin: EdgeInsets.all(10),
+              padding: EdgeInsets.all(15),
+              child: Center(
+                child: 
+                PageViewScreen(),
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Color.fromRGBO(33, 64, 100, 1),
               ),
             ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Color.fromRGBO(33, 64, 100, 1),
-            ),
-          ),
-          Container(
-            alignment: Alignment.center,
-            transformAlignment: Alignment.center,
-            height: 520,
-            child: Center(
-              child: GridView.count(
-                crossAxisCount: 2,
-                children: [
-                  DashboardMenuItem(
-                    title: 'Total Stok',
-                    value: '150',
-                    icon: Icons.shopping_cart,
-                    onPressed: () {
-                      // TODO: Implement sales functionality
-                    },
-                  ),
-                  DashboardMenuItem(
-                    title: 'Laporan Penjualan',
-                    value: '25',
-                    icon: Icons.insert_chart,
-                    onPressed: () {
-                      // TODO: Implement inventory functionality
-                    },
-                  ),
-                  DashboardMenuItem(
-                    title: 'Member',
-                    value: '500',
-                    icon: Icons.person,
-                    onPressed: () {
-                      // TODO: Implement customers functionality
-                    },
-                  ),
-                  DashboardMenuItem(
-                    title: 'Saldo',
-                    value: 'Rp 10.000.000',
-                    icon: Icons.account_balance_wallet,
-                    onPressed: () {
-                      // TODO: Implement reports functionality
-                    },
-                  ),
-                ],
+            Container(
+              width: double.infinity,
+              height: 400,
+              child: Center(
+                child: Column(
+                
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  
+                  children: [
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 200,
+                          width: 200,
+                          child: DashboardMenuItem(
+                                            
+                            title: 'Total Stok',
+                            value: '150',
+                            icon: Icons.shopping_cart,
+                            onPressed: () {
+                              // TODO: Implement sales functionality
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: 200,
+                          width: 200,
+                          child: DashboardMenuItem(
+                            title: 'Laporan Penjualan',
+                            value: '25',
+                            icon: Icons.insert_chart,
+                            onPressed: () {
+                              // TODO: Implement inventory functionality
+                            },
+                          ),
+                        ),
+                      
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                          SizedBox(
+                            height: 200,
+                            width: 200,
+                            child: DashboardMenuItem(
+                            title: 'Member',
+                            value: '500',
+                            icon: Icons.person,
+                            onPressed: () {
+                              // TODO: Implement customers functionality
+                            },
+                                                  ),
+                          ),
+                        SizedBox(
+                          height: 200,
+                          width: 200,
+                          child: DashboardMenuItem(
+                            title: 'Saldo',
+                            
+                            value: 'Rp 1.000.000' ,
+                            icon: Icons.account_balance_wallet,
+                            onPressed: () {
+                              // TODO: Implement reports functionality
+                            },
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-          Container(
-            alignment: Alignment.center,
-            height: 200,
-            padding: EdgeInsets.all(2),
-            child: charts.BarChart(
-              _createSampleData(),
-              animate: true,
+            Container(
+              alignment: Alignment.center,
+              height: 200,
+              padding: EdgeInsets.all(2),
+              child: charts.BarChart(
+                _createSampleData(),
+                animate: true,
+              ),
             ),
-          ),
-        ],
+                  
+          ],
+          
+        ),
       ),
     );
   }

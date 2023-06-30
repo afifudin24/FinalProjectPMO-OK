@@ -17,6 +17,17 @@ class TokoService {
     });
     return tokoList;
   }
+  Future<List<Toko>> getDataItems(String id) async {
+    List<Toko> tokoList = [];
+
+    QuerySnapshot snapshot = await tokoCollection.where("idtoko", isEqualTo: id).get();
+
+    snapshot.docs.forEach((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      tokoList.add(Toko.fromMap(data));
+    });
+    return tokoList;
+  }
 
   Future<List<String>> getDocumentIds() async {
     final querySnapshot = await tokoCollection.get();

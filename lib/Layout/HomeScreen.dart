@@ -69,8 +69,9 @@ class _HomePageState extends State<HomePage> {
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await firestore
           .collection('toko')
-          .where('email', isEqualTo: currentUser?.uid)
-          .get();
+        // .where('email', isEqualTo: currentUser!.email)
+        .where('idtoko', isEqualTo: "123")
+        .get();
 
       if (querySnapshot.docs.isNotEmpty) {
         // Data ditemukan dalam koleksi

@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'Layout/LoginPage.dart';
 import 'firebase_options.dart';
 import 'Proses/CekProfil.dart';
-
+import 'Layout/Pageview.dart';
 FirebaseAuth _auth = FirebaseAuth.instance;
 User? currentUser = _auth.currentUser as User?;
 FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -28,7 +28,8 @@ Future<void> fetchUsers() async {
   try {
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await firestore
         .collection('toko')
-        .where('email', isEqualTo: currentUser!.email)
+        // .where('email', isEqualTo: currentUser!.email)
+        .where('idtoko', isEqualTo: "123")
         .get();
     if (querySnapshot.docs.isNotEmpty) {
       // Data ditemukan dalam koleksi

@@ -13,18 +13,18 @@ class LaporanPemasukan {
       required this.date});
   Map<String, dynamic> toMap() {
     return {
-      'id transaksi': idTransaksi,
-      'juml barang': jumlBarang,
-      'total harga': totalHarga,
+      'idTransaksi': idTransaksi,
+      'jumlBarang': jumlBarang,
+      'totalHarga': totalHarga,
       'date': date
     };
   }
 
   factory LaporanPemasukan.fromMap(Map<String, dynamic> map) {
     return LaporanPemasukan(
-        idTransaksi: map['id transaksi'],
-        jumlBarang: map['juml harga'],
-        totalHarga: map['total harga'],
+        idTransaksi: map['idTransaksi'],
+        jumlBarang: map['jumlHarga'],
+        totalHarga: map['totalHarga'],
         date: map['date']);
   }
 }

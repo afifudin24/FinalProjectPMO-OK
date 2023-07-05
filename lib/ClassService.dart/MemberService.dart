@@ -18,6 +18,17 @@ class MemberService {
     return memberList;
   }
 
+  Future<List<Member>> getMembersData(String id) async {
+    List<Member> memberList = [];
+    QuerySnapshot snapshot =
+        await memberCollection.where('idToko', isEqualTo: id).get();
+    snapshot.docs.forEach((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      memberList.add(Member.fromMap(data));
+    });
+    return memberList;
+  }
+
   Future<List<String>> getMemberDocumentIds() async {
     final querySnapshot = await memberCollection.get();
     final documentIds = querySnapshot.docs.map((doc) => doc.id).toList();

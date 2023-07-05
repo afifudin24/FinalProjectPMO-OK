@@ -1,4 +1,4 @@
-import '../ClassService.dart/MemberClassService.dart';
+import '../ClassService.dart/MemberService.dart';
 
 class Member {
   String idMember;

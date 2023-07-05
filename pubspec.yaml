@@ -45,6 +45,7 @@ dependencies:
   firebase_storage: ^11.2.3
   # firebase_storage: ^10.0.2
   image_picker: ^0.8.4+4
+  need_resume: ^1.0.6
 
 dependency_overrides:
   firebase_core_platform_interface: 4.8.0

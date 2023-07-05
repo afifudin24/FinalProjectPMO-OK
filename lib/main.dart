@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
+import 'Layout/komposisi.dart';
 import 'package:kasir_euy/Layout/FormInfoPage.dart';
 import 'package:kasir_euy/Layout/HomeScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,6 +10,7 @@ import 'Layout/LoginPage.dart';
 import 'firebase_options.dart';
 import 'Proses/CekProfil.dart';
 import 'Layout/Pageview.dart';
+
 FirebaseAuth _auth = FirebaseAuth.instance;
 User? currentUser = _auth.currentUser as User?;
 FirebaseFirestore firestore = FirebaseFirestore.instance;

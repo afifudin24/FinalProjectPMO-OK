@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kasir_euy/Class/DonasiClass.dart';
 import 'package:kasir_euy/Layout/BarangList.dart';
+import 'package:kasir_euy/Layout/PenyaluranDonasi.dart';
 
 class KasirMenuPage extends StatelessWidget {
   @override
@@ -11,12 +13,21 @@ class KasirMenuPage extends StatelessWidget {
       );
     }
 
+    void pindahSalurkanDonasi() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => PenyaluranDonasi()),
+      );
+    }
+
     return GridView.count(
       crossAxisCount: 2,
       children: [
         _buildMenuItem(Icons.inventory, 'Stok Barang', pindah),
         _buildMenuItem(Icons.person, 'Member', '/login'),
         _buildMenuItem(Icons.money, 'Donasi', '/home'),
+        _buildMenuItem(Icons.stacked_line_chart, 'Laporan Penjualan', '/home'),
+        _buildMenuItem(Icons.send_to_mobile, 'Penyaluran Donasi', pindahSalurkanDonasi),
         _buildMenuItem(Icons.stacked_line_chart, 'Laporan Penjualan', '/home'),
       ],
     );

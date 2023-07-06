@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kasir_euy/Class/MemberClass.dart';
-import 'package:kasir_euy/ClassService.dart/MemberClassService.dart';
-import 'package:kasir_euy/ClassService.dart/MemberClassService.dart';
+import 'package:kasir_euy/ClassService.dart/MemberService.dart';
+import 'package:kasir_euy/ClassService.dart/MemberService.dart';
 
 import '../Class/TokoClass.dart';
 
@@ -61,7 +61,7 @@ class _CrudMemberClass extends State<CrudMemberClass> {
         onPressed: () {
           setState(() {
             Member newItem = Member(
-                idMember:  '128klk3gjh',
+                idMember: '128klk3gjh',
                 email: 'Itemoojjlk 1hgjh',
                 nama: 'Deslcr;kkiptjhgion 1',
                 alamat: 'ok',

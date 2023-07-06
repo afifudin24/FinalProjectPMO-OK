@@ -4,15 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kasir_euy/Layout/MenuLayout.dart';
 import 'package:kasir_euy/Layout/ProfilPage.dart';
+import '../Class/TokoClass.dart';
+import '../ClassService.dart/TokoService.dart';
 import 'DashboardPage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'TransaksiPage.dart';
 import '../main.dart';
+import 'komposisi.dart';
 
 var warna = Color.fromRGBO(33, 64, 100, 1);
 List menu = [DashboardScreen(), TransaksiScreen(), KasirMenuPage(), Profil()];
 List visibilitasLeading = [false, false, false, true];
-List title = ["Dashboard", "Transaksi", "Menu", "Profil"];
+List title = ["Selamat Datang ", "Transaksi", "Menu", "Profil"];
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -26,6 +29,8 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController conEmail = TextEditingController();
   final TextEditingController conMotto = TextEditingController();
   final TextEditingController conNamaToko = TextEditingController();
+  TokoService tokoController = TokoService();
+  List<Toko> toko = [];
   File? _imageFile;
   Future<void> _pickImage() async {
     final picker = ImagePicker();
@@ -63,15 +68,25 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     initData();
+    _getUser();
+  }
+
+  Future<void> _getUser() async {
+    List<Toko> tokoIni = await tokoController.getDataItems("123");
+    setState(() {
+      toko = tokoIni;
+      print(toko[0].adminToko);
+      var admin = toko[0].adminToko;
+      title[0] = "Selamat datang, $admin";
+    });
   }
 
   Future<void> fetchUsers() async {
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await firestore
           .collection('toko')
-        // .where('email', isEqualTo: currentUser!.email)
-        .where('idtoko', isEqualTo: "123")
-        .get();
+          .where('idtoko', isEqualTo: "123")
+          .get();
 
       if (querySnapshot.docs.isNotEmpty) {
         // Data ditemukan dalam koleksi
@@ -245,16 +260,48 @@ class _HomePageState extends State<HomePage> {
             visible: visRumah,
             child: Scaffold(
               appBar: AppBar(
-                title: Text(title[_selectedNavbar]),
-                actions: [
-                  Visibility(
-                    visible: visibilitasLeading[_selectedNavbar],
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.settings,
-                        color: Colors.white,
+                clipBehavior: Clip.antiAlias,
+                toolbarHeight: 60,
+                bottomOpacity: 1.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(20),
+                  ),
+                ),
+                title: Text(
+                  title[_selectedNavbar],
+                  style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: primaryColor),
+                ),
+                flexibleSpace: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20.0),
+                        bottomRight: Radius.circular(20.0),
                       ),
-                      onPressed: () {},
+                      color: Colors.white),
+                ),
+                centerTitle: true,
+                actions: [
+                  Container(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Visibility(
+                            visible: visibilitasLeading[_selectedNavbar],
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.settings,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {},
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Visibility(
@@ -283,7 +330,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              body: menu[_selectedNavbar],
+              body: Container(
+                height: MediaQuery.of(context).size.height,
+                child: menu[_selectedNavbar],
+              ),
               bottomNavigationBar: BottomNavigationBar(
                 items: [
                   BottomNavigationBarItem(

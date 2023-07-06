@@ -1,29 +1,40 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:kasir_euy/Class/LaporanPemasukanClass.dart';
-import '../Class/LaporanPemasukanClass.dart';
-import '../Class/LaporanPemasukanClass.dart';
+
 import '../Class/LaporanPenjualanClass.dart';
 
 class LaporanPenjualanService {
   final CollectionReference laporanPenjualan =
-      FirebaseFirestore.instance.collection('laporanPemasukan');
+      FirebaseFirestore.instance.collection('laporanPenjualan');
 
   Future<List<LaporanPenjualan>> getItems() async {
-    List<LaporanPenjualan> laporanpemasukanList = [];
+    List<LaporanPenjualan> laporanpenjualanList = [];
 
     QuerySnapshot snapshot = await laporanPenjualan.get();
 
     snapshot.docs.forEach((doc) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      laporanpemasukanList.add(LaporanPenjualan.fromMap(data));
+      laporanpenjualanList.add(LaporanPenjualan.fromMap(data));
     });
-    return laporanpemasukanList;
+    return laporanpenjualanList;
   }
 
   Future<List<String>> getDocumentIds() async {
     final querySnapshot = await laporanPenjualan.get();
     final documentIds = querySnapshot.docs.map((doc) => doc.id).toList();
     return documentIds;
+  }
+
+  Future<List<LaporanPenjualan>> getData(String kd) async {
+    List<LaporanPenjualan> laporanpenjualanListData = [];
+
+    QuerySnapshot snapshot =
+        await laporanPenjualan.where("idToko", isEqualTo: kd).get();
+
+    snapshot.docs.forEach((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      laporanpenjualanListData.add(LaporanPenjualan.fromMap(data));
+    });
+    return laporanpenjualanListData.toList();
   }
 
   Future<void> addItem(LaporanPenjualan item) {

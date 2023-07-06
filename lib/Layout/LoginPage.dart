@@ -29,71 +29,113 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: Container(
-                transformAlignment: Alignment.center,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Color.fromARGB(255, 14, 57, 105)),
-                child: Visibility(
-                    visible: visibilitas,
-                    child: SizedBox(
-                      height: 50,
-                      width: 300,
-                      child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              statusLog,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
+      // appBar: AppBar(
+        // title: Text('Login'),
+      // ),
+      body: 
+      Container(
+        color: Color.fromRGBO(33, 64, 100, 1),
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: Container(
+                  transformAlignment: Alignment.center,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      //color: Color.fromRGBO(33, 64, 100, 1)
                       ),
-                    )),
+                  child: Visibility(
+                      visible: visibilitas,
+                      child: SizedBox(
+                        height: 50,
+                        width: 300,
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                statusLog,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )),
+                ),
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'E-mail',
+              SizedBox(
+                height: 10,
               ),
-            ),
-            SizedBox(height: 16.0),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Password',
+              Text('LOGIN',
+                
+              style: TextStyle(
+                fontSize: 50,
+                color: Colors.white,
               ),
-            ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: _login,
-              child: Text('Login'),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            GestureDetector(onTap: _login, child: Text("Belum punya akun?"))
-          ],
+              ),
+              SizedBox(height: 70.0),
+              Image.asset(
+                "assets/image/kasir.png",
+                height: 150,
+                width: 150,
+                ),
+                SizedBox(height: 30.0),
+
+              TextField(
+                controller: _usernameController,
+                decoration: InputDecoration(
+                  fillColor: Colors.white, 
+                  // Mengubah warna latar belakang TextField
+                  filled: true,
+                  border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12)), 
+                  ),
+                  labelText: 'E-mail',
+                ),
+              ),
+              SizedBox(height: 16.0),
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  fillColor: Colors.white, 
+                  // Mengubah warna latar belakang TextField
+                  filled: true,
+                  border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12)), 
+                  ),
+                  labelText: 'Password',
+                ),
+              ),
+              SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: _login,
+                child: Text('Login'),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(150, 50),
+                  primary: Colors.amber,
+                )
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              GestureDetector(onTap: _login, 
+              child: Text(
+                "Belum punya akun?",
+                
+              style: TextStyle(
+                color: Colors.white,
+              ),
+              ),
+              )
+            ],
+          ),
         ),
       ),
     );

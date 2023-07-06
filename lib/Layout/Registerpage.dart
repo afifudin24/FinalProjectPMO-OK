@@ -19,6 +19,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Register"),
+        backgroundColor: Colors.purple,
       ),
       body: Form(
         key: _formKey,
@@ -60,6 +61,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     print("oke");
                   },
                   child: Text('Register'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.orange,
+                  ),
                 ),
                 Center(
                   child: GestureDetector(

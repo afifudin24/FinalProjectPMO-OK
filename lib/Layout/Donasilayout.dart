@@ -1,4 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:kasir_euy/Layout/HomeScreen.dart';
+import 'package:kasir_euy/Layout/MenuLayout.dart';
+import 'package:kasir_euy/main.dart';
+
+import '../Class/DonasiClass.dart';
+import '../ClassService.dart/DonasiService.dart';
 
 void main() {
   runApp(DonationApp());
@@ -25,6 +32,11 @@ class _DonationScreenState extends State<DonationScreen> {
   String email = '';
   String phoneNumber = '';
   double donationAmount = 0.0;
+  TextEditingController namadonatur = TextEditingController();
+  TextEditingController emailoke = TextEditingController();
+  TextEditingController notelpon = TextEditingController();
+  TextEditingController jumlah = TextEditingController();
+   DonasiService donasicontroller = DonasiService();
 
   @override
   Widget build(BuildContext context) {
@@ -66,11 +78,13 @@ class _DonationScreenState extends State<DonationScreen> {
                           donorName = value;
                         });
                       },
+                      controller: namadonatur,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.white,
                         label: Text('Nama Donatur'),
                         border: OutlineInputBorder(),
+                        
                       ),
                     ),
                     SizedBox(height: 16.0),
@@ -85,6 +99,7 @@ class _DonationScreenState extends State<DonationScreen> {
                           email = value;
                         });
                       },
+                      controller: emailoke,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.white,
@@ -104,6 +119,7 @@ class _DonationScreenState extends State<DonationScreen> {
                           phoneNumber = value;
                         });
                       },
+                      controller: notelpon,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.white,
@@ -123,6 +139,7 @@ class _DonationScreenState extends State<DonationScreen> {
                           donationAmount = double.tryParse(value) ?? 0.0;
                         });
                       },
+                      controller: jumlah,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.white,
@@ -135,11 +152,34 @@ class _DonationScreenState extends State<DonationScreen> {
                       child: ElevatedButton(
                         
                         onPressed: () {
-                             // Proses donasi
-                          print('Donatur: $donorName');
-                          print('Email: $email');
-                          print('Nomor Telepon: $phoneNumber');
-                          print('Jumlah Donasi: $donationAmount');
+                              setState(() {
+                String randomId = FirebaseFirestore.instance.collection('donasi').doc().id;
+            Donasi newItem = Donasi(
+                kdDonasi: randomId,
+                email: emailoke.text,
+         
+                idToko: "dafa",
+                jumlah: int.parse(jumlah.text),
+                namadonatur: namadonatur.text,
+                noTelp: notelpon.text);
+            donasicontroller.addItem(randomId, newItem).then((value) {
+              showDialog(context: context, builder: (BuildContext context) { 
+                return AlertDialog(
+                  title: Text('Berhasil'),
+                  content: Text("Data telah ditambahkan"),
+                );
+               }, );
+             Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(builder: (context) => HomePage()),
+);
+            }).catchError((error) {
+              print(error);
+            });
+            print("okbng");
+           
+          });
+         
 
                         },
                         child: Text('Donasi'),

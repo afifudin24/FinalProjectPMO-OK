@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../Class/TokoClass.dart';
+import '../ClassService.dart/TokoService.dart';
 import 'HomeScreen.dart';
 
 class Profil extends StatefulWidget {
@@ -9,169 +11,184 @@ class Profil extends StatefulWidget {
 }
 
 class _ProfilState extends State<Profil> {
-  String namaToko = "Toko Agri";
-  String alamatToko = 'Jl.953 pratiwi,East Clementinetown,kalimantan selatan';
-  String visiToko =
-      'Menjadi perusahaan yang bergerak di bidang finance technology terpercaya dan tangguh';
-  String contact = '+62 897 520 475';
-  String misiToko =
-      'Memberdayakan 50 juta pengguna yang kurang mendapat pelayanan terbaik di 10 negara dengan layanan keuangan digital yang lebih baik, cepat, dan nyaman pada 2025. Serta membangun jaringan baru sistem pembayaran kredit dan debit virtual untuk non perbankan dan merchant';
+  TokoService controller = TokoService();
+  String namatoko = "";
+  String alamat = "";
+  String mottotoko = "";
+  String emailtoko = "";
+  String urlImage = "";
+  void initState() {
+    super.initState();
+    _loadUsers();
+
+    print("OK");
+  }
+
+  Future<void> _loadUsers() async {
+    print("lah");
+    List<Toko> tokos = await controller.getDataItems("123");
+    setState(() {
+      namatoko = tokos[0].namatoko;
+      alamat = tokos[0].alamat;
+      mottotoko = tokos[0].mottotoko;
+      emailtoko = tokos[0].email;
+      urlImage = tokos[0].urlImage;
+
+      print(tokos[0].adminToko);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(16.0),
-      child: ListView(
-        shrinkWrap: true,
-        physics: BouncingScrollPhysics(),
-        children: [
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: NetworkImage(
-                    'https://cdn.pixabay.com/photo/2023/05/31/17/54/cat-8031947_1280.jpg',
-                  ),
-                ),
-                SizedBox(height: 16),
-                Text(
-                  namaToko,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 16),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Alamat : ',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            alamatToko,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Visi : ',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            visiToko,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Misi : ',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            misiToko,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Contact : ',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            contact,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+    return SingleChildScrollView(
+      child: Container(
+        height: MediaQuery.of(context).size.height,
+        color: Color.fromRGBO(33, 64, 100, 1),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.all(10),
+              padding: EdgeInsets.all(10),
+              child: Center(),
             ),
-          ),
-        ],
+            Container(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: ListView(
+                  shrinkWrap: true,
+                  physics: BouncingScrollPhysics(),
+                  children: [
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // Image.file(
+                          //   File(urlImage),
+                          //   height: 200,
+                          // ),
+                          CircleAvatar(
+                            radius: 50,
+                            backgroundImage: AssetImage(urlImage),
+                          ),
+                          SizedBox(height: 16),
+                          Text(
+                            namatoko,
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                          SizedBox(height: 16),
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(10.0)),
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Alamat : ',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      alamat,
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.black),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 16),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Motto    : ',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      mottotoko,
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.black),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 16),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Email   : ',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      emailtoko,
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.black),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

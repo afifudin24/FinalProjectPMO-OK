@@ -5,17 +5,18 @@ class Toko {
   String email;
   String namatoko;
   String mottotoko;
-  int status;
+
   String adminToko;
   String urlImage;
+  String alamat;
 
   Toko(
       {required this.idtoko,
       required this.email,
       required this.namatoko,
       required this.mottotoko,
-      required this.status,
       required this.adminToko,
+      required this.alamat,
       required this.urlImage});
   Map<String, dynamic> toMap() {
     return {
@@ -23,9 +24,9 @@ class Toko {
       'email': email,
       'namatoko': namatoko,
       'mottotoko': mottotoko,
-      'status': status.toDouble(),
       'adminToko': adminToko,
-      'urlImage': urlImage
+      'urlImage': urlImage,
+      'alamat': alamat,
     };
   }
 
@@ -35,9 +36,9 @@ class Toko {
       email: map['email'],
       namatoko: map['namatoko'],
       mottotoko: map['mottotoko'],
-      status: map['status'].toDouble(),
       adminToko: map['adminToko'],
       urlImage: map['urlImage'],
+      alamat: map['alamatToko'],
     );
   }
 }

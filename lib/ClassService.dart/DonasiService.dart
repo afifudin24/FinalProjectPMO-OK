@@ -6,10 +6,10 @@ class DonasiService {
   final CollectionReference DonasiCollection =
       FirebaseFirestore.instance.collection('donasi');
 
-  Future<List<Donasi>> getItems() async {
+  Future<List<Donasi>> getItems(String kd) async {
     List<Donasi> donasiList = [];
 
-    QuerySnapshot snapshot = await DonasiCollection.get();
+    QuerySnapshot snapshot = await DonasiCollection.where('idToko', isEqualTo: kd).get();
 
     snapshot.docs.forEach((doc) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
@@ -24,7 +24,7 @@ class DonasiService {
     return documentIds;
   }
 
-  Future<void> addItem(Donasi item) {
+  Future<void> addItem(String id, Donasi item) {
     String randomId = FirebaseFirestore.instance.collection('donasi').doc().id;
     return DonasiCollection.doc(randomId).set(item.toMap());
   }

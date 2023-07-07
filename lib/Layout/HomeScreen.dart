@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kasir_euy/Layout/MenuLayout.dart';
 import 'package:kasir_euy/Layout/ProfilPage.dart';
+import 'package:kasir_euy/Layout/editprofil.dart';
 import '../Class/TokoClass.dart';
 import '../ClassService.dart/TokoService.dart';
 import 'DashboardPage.dart';
@@ -295,7 +296,7 @@ class _HomePageState extends State<HomePage> {
                             child: IconButton(
                               icon: Icon(
                                 Icons.settings,
-                                color: Colors.white,
+                                color: Color.fromRGBO(33, 64, 100, 1),
                               ),
                               onPressed: () {},
                             ),
@@ -309,9 +310,13 @@ class _HomePageState extends State<HomePage> {
                     child: IconButton(
                       icon: Icon(
                         Icons.edit,
-                        color: Colors.white,
+                        color: Color.fromRGBO(33, 64, 100, 1),
                       ),
                       onPressed: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(builder: (context) => EditProfil()),
+                        // );
                         // Tombol Edit ditekan
                       },
                     ),
@@ -321,7 +326,7 @@ class _HomePageState extends State<HomePage> {
                     child: IconButton(
                       icon: Icon(
                         Icons.logout,
-                        color: Colors.white,
+                        color: Color.fromRGBO(33, 64, 100, 1),
                       ),
                       onPressed: () {
                         // Tombol Log Out ditekan

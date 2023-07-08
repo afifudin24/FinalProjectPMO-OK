@@ -37,10 +37,9 @@ class LaporanPenjualanService {
     return laporanpenjualanListData.toList();
   }
 
-  Future<void> addItem(LaporanPenjualan item) {
-    String randomId =
-        FirebaseFirestore.instance.collection('laporanpemasukan').doc().id;
-    return laporanPenjualan.doc(randomId).set(item.toMap());
+  Future<void> addItem(String id, LaporanPenjualan item) {
+
+    return laporanPenjualan.doc(id).set(item.toMap());
   }
 
   Future<void> updateItem(String id, item) {

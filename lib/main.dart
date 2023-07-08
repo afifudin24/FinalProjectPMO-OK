@@ -1,7 +1,10 @@
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:kasir_euy/Layout/Registerpage.dart';
 import 'Layout/komposisi.dart';
 import 'package:kasir_euy/Layout/FormInfoPage.dart';
 import 'package:kasir_euy/Layout/HomeScreen.dart';
@@ -71,50 +74,50 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
-      // home: AnimatedSplashScreen(
-      //   splashIconSize: MediaQuery.of(context).size.height,
-      //   splash: Scaffold(
-      //     resizeToAvoidBottomInset: false,
-      //     extendBody: true,
-      //     backgroundColor: Colors.transparent,
-      //     body: Center(
-      //       child: SingleChildScrollView(
-      //         child: Column(
-      //           children: [
-      //             Image.asset(
-      //               "assets/image/logo.png",
-      //               height: 200,
-      //               width: 200,
-      //             ),
-      //             SizedBox(
-      //               height: 20,
-      //             ),
-      //             Text(
-      //               "KASIR-EUY",
-      //               style: GoogleFonts.montserrat(
-      //                   fontSize: 24, color: Colors.white),
-      //             ),
-      //             SizedBox(
-      //               height: 20,
-      //             ),
-      //             CircularProgressIndicator(
-      //               color: Colors.grey,
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //     ),
-      //   ),
-      //   // Ganti dengan path gambar splash screen Anda
-      //   nextScreen: Tentukan(
-      //     isLoggedIn: isLoggedIn,
-      //   ), // Ganti dengan widget berikutnya setelah splash screen selesai
-      //   splashTransition: SplashTransition.fadeTransition,
-      //   backgroundColor: Color.fromRGBO(33, 64, 100, 1),
-      //   duration: 3000, // Durasi tampilan splash screen dalam milidetik,
-      // ));
-    );
+      // home: HomePage(),
+      home: AnimatedSplashScreen(
+        splashIconSize: MediaQuery.of(context).size.height,
+        splash: Scaffold(
+          resizeToAvoidBottomInset: false,
+          extendBody: true,
+          backgroundColor: Colors.transparent,
+          body: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Image.asset(
+                    "assets/image/logo.png",
+                    height: 200,
+                    width: 200,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "KASIR-EUY",
+                    style: GoogleFonts.montserrat(
+                        fontSize: 24, color: Colors.white),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  CircularProgressIndicator(
+                    color: Colors.grey,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        // Ganti dengan path gambar splash screen Anda
+        nextScreen: Tentukan(
+          isLoggedIn: isLoggedIn,
+        ), // Ganti dengan widget berikutnya setelah splash screen selesai
+        splashTransition: SplashTransition.fadeTransition,
+        backgroundColor: Color.fromRGBO(33, 64, 100, 1),
+        duration: 3000, // Durasi tampilan splash screen dalam milidetik,
+      ));
+    // );
   }
 }
 
@@ -196,6 +199,7 @@ class Tentukan extends StatelessWidget {
       initialRoute: isLoggedIn ? '/home' : '/login',
       routes: {
         '/login': (context) => LoginPage(),
+        '/register': (context) => RegisterPage(),
         '/home': (context) => HomePage(),
         '/cek': (context) => Cek(),
         '/oke': (context) => FormInfo(),

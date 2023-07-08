@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kasir_euy/Class/BarangClass.dart';
+import 'package:kasir_euy/main.dart';
 
 import '../ClassService.dart/BarangService.dart';
 
@@ -27,7 +28,7 @@ class _KocakState extends State<Kocak> {
 
   Future<void> _loadUsers() async {
     print("lah");
-    List<Barang> barangs = await controller.getItems("546");
+    List<Barang> barangs = await controller.getItems(currentUser!.uid);
     setState(() {
       _barang = barangs;
     });
@@ -151,17 +152,18 @@ class _KocakState extends State<Kocak> {
 
                                   setState(() {
                                     Barang newItem = Barang(
-                                        idtoko: '546',
+                                        idtoko: currentUser!.uid,
                                         kdbarang: kdbarang,
                                         namabarang: namabarang,
                                         stok: stokbarang,
                                         harga: hargabarang,
                                         terjual: 0);
-                                    controller.addItem(newItem);
+                                    controller.addItem(kdbarang, newItem);
+                                    Navigator.pop(context);
 
-                                    _loadUsers();
-                                    refreshPage();
+                            
                                   });
+                                    refreshPage();
                                 },
                                 child: Text("Tambah Barang"))
                           ],
@@ -302,7 +304,7 @@ class _KocakState extends State<Kocak> {
                                                   int.parse(conTerjual.text);
                                               setState(() {
                                                 Barang newItem = Barang(
-                                                    idtoko: '546',
+                                                    idtoko: currentUser!.uid,
                                                     kdbarang: kdbarang,
                                                     namabarang: namabarang,
                                                     stok: stokbarang,
@@ -347,8 +349,8 @@ class _KocakState extends State<Kocak> {
                                         child: Text("Batal")),
                                     TextButton(
                                         onPressed: () {
-                                          controller.deleteItem(_id[index]);
-
+                                          controller.deleteItem(_barang[index].kdbarang);
+                                          Navigator.of(context).pop();
                                           refreshPage();
                                         },
                                         child: Text("Hapus")),
@@ -367,9 +369,8 @@ class _KocakState extends State<Kocak> {
   }
 
   void refreshPage() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => Kocak()),
-    );
+   setState(() {
+     _loadUsers();
+   });
   }
 }

@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'LoginPage.dart';
@@ -13,6 +15,20 @@ class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  Future<void> registerUser(String email, String password) async {
+  try {
+    await Firebase.initializeApp();
+    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    User? user = userCredential.user;
+    Navigator.pushReplacementNamed(context, '/login');
+    // Registrasi berhasil, lakukan tindakan lanjutan seperti menyimpan data pengguna ke database, dll.
+  } catch (e) {
+    // Penanganan kesalahan saat registrasi
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +142,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   SizedBox(height: 30.0),
                   ElevatedButton(
                     onPressed: () {
-                      print("oke");
+                       registerUser(_emailController.text, _passwordController.text);
                     },
                     child: Text('Register'),
                     style: ElevatedButton.styleFrom(

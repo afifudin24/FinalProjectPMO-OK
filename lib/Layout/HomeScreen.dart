@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kasir_euy/Layout/MenuLayout.dart';
 import 'package:kasir_euy/Layout/ProfilPage.dart';
-import 'package:kasir_euy/Layout/editprofil.dart';
 import '../Class/TokoClass.dart';
 import '../ClassService.dart/TokoService.dart';
 import 'DashboardPage.dart';
@@ -16,8 +15,8 @@ import 'komposisi.dart';
 var warna = Color.fromRGBO(33, 64, 100, 1);
 List menu = [DashboardScreen(), TransaksiScreen(), KasirMenuPage(), Profil()];
 List visibilitasLeading = [false, false, false, true];
-List title = ["Selamat Datang ", "Transaksi", "Menu", "Profil"];
-
+List title = ["Selamat Datang, ", "Transaksi", "Menu", "Profil"];
+var namatoko = "";
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -30,8 +29,10 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController conEmail = TextEditingController();
   final TextEditingController conMotto = TextEditingController();
   final TextEditingController conNamaToko = TextEditingController();
+  final TextEditingController conAlamat = TextEditingController();
   TokoService tokoController = TokoService();
   List<Toko> toko = [];
+  var image;
   File? _imageFile;
   Future<void> _pickImage() async {
     final picker = ImagePicker();
@@ -40,10 +41,12 @@ class _HomePageState extends State<HomePage> {
     if (pickedImage != null) {
       setState(() {
         _imageFile = File(pickedImage.path as String);
+        image = pickedImage.path;
       });
       print(_imageFile);
     }
   }
+
 
   var nama = "";
   final _formKey = GlobalKey<FormState>();
@@ -71,14 +74,27 @@ class _HomePageState extends State<HomePage> {
     initData();
     _getUser();
   }
+  //   Future<void> _simpan() async {
+  //   List<Toko> tokoIni = await tokoController.getDataItems(currentUser!.uid.toString());
+  //   setState(() {
+  //     toko = tokoIni;
+  //     var admin = toko[0].adminToko;
+  //     title[0] = "Selamat datang, $admin";
+  //     namatoko = toko[0].namatoko;
+  //     print(toko[0].adminToko);
+  //     print(namatoko);
+  //   });
+  // }
 
   Future<void> _getUser() async {
-    List<Toko> tokoIni = await tokoController.getDataItems("123");
+    List<Toko> tokoIni = await tokoController.getDataItems(currentUser!.uid.toString());
     setState(() {
       toko = tokoIni;
-      print(toko[0].adminToko);
       var admin = toko[0].adminToko;
       title[0] = "Selamat datang, $admin";
+      namatoko = toko[0].namatoko;
+      print(toko[0].adminToko);
+      print(namatoko);
     });
   }
 
@@ -86,7 +102,7 @@ class _HomePageState extends State<HomePage> {
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await firestore
           .collection('toko')
-          .where('idtoko', isEqualTo: "123")
+          .where('idtoko', isEqualTo: currentUser!.uid.toString())
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
@@ -173,7 +189,7 @@ class _HomePageState extends State<HomePage> {
                                     height: 20,
                                   ),
                                   TextFormField(
-                                    controller: conNama,
+                                    controller: conEmail,
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(
                                             borderRadius:
@@ -191,7 +207,7 @@ class _HomePageState extends State<HomePage> {
                                     height: 20,
                                   ),
                                   TextFormField(
-                                    controller: conNama,
+                                    controller: conNamaToko,
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(
                                             borderRadius:
@@ -209,7 +225,25 @@ class _HomePageState extends State<HomePage> {
                                     height: 20,
                                   ),
                                   TextFormField(
-                                    controller: conNama,
+                                    controller: conMotto,
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        contentPadding: EdgeInsets.all(10),
+                                        label: Text("Motto Toko")),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Motto toko harus diisi';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  TextFormField(
+                                    controller: conAlamat,
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(
                                             borderRadius:
@@ -250,7 +284,21 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
                             ),
-                          )
+                          ),
+                           ElevatedButton(
+                                      style: ButtonStyle(
+                                          padding: MaterialStatePropertyAll(
+                                              EdgeInsetsDirectional.all(12)),
+                                          backgroundColor:
+                                              MaterialStatePropertyAll(
+                                                  Colors.orange)),
+                                      onPressed: () {
+                                     Toko data =    Toko(idtoko: currentUser!.uid.toString(), email: conEmail.text, namatoko: conNamaToko.text, mottotoko: conMotto.text, adminToko: conNama.text, alamat: conAlamat.text, urlImage: image);
+                                      tokoController.addItem(data);
+                                      Navigator.pushReplacementNamed(context, '/home');
+                                      },
+                                      child: Text("Simpan")),
+                                 
                         ]),
                   ),
                 ),
@@ -296,7 +344,7 @@ class _HomePageState extends State<HomePage> {
                             child: IconButton(
                               icon: Icon(
                                 Icons.settings,
-                                color: Color.fromRGBO(33, 64, 100, 1),
+                                color: Colors.white,
                               ),
                               onPressed: () {},
                             ),
@@ -310,13 +358,9 @@ class _HomePageState extends State<HomePage> {
                     child: IconButton(
                       icon: Icon(
                         Icons.edit,
-                        color: Color.fromRGBO(33, 64, 100, 1),
+                        color: Colors.white,
                       ),
                       onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => EditProfil()),
-                        // );
                         // Tombol Edit ditekan
                       },
                     ),
@@ -326,7 +370,7 @@ class _HomePageState extends State<HomePage> {
                     child: IconButton(
                       icon: Icon(
                         Icons.logout,
-                        color: Color.fromRGBO(33, 64, 100, 1),
+                        color: Colors.white,
                       ),
                       onPressed: () {
                         // Tombol Log Out ditekan

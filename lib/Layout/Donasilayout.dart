@@ -158,7 +158,7 @@ class _DonationScreenState extends State<DonationScreen> {
                 kdDonasi: randomId,
                 email: emailoke.text,
          
-                idToko: "dafa",
+                idToko: currentUser!.uid.toString(),
                 jumlah: int.parse(jumlah.text),
                 namadonatur: namadonatur.text,
                 noTelp: notelpon.text);

@@ -20,7 +20,7 @@ class LaporanPemasukanService {
   Future<List<LaporanPemasukan>> getData(String id) async {
     List<LaporanPemasukan> laporanpemasukanList = [];
 
-    QuerySnapshot snapshot = await laporanPemasukan.get();
+    QuerySnapshot snapshot = await laporanPemasukan.where("idToko", isEqualTo: id).get();
 
     snapshot.docs.forEach((doc) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
@@ -35,10 +35,9 @@ class LaporanPemasukanService {
     return documentIds;
   }
 
-  Future<void> addItem(LaporanPemasukan item) {
-    String randomId =
-        FirebaseFirestore.instance.collection('laporanpemasukan').doc().id;
-    return laporanPemasukan.doc(randomId).set(item.toMap());
+  Future<void> addItem(String id, LaporanPemasukan item) {
+    
+    return laporanPemasukan.doc(id).set(item.toMap());
   }
 
   Future<void> updateItem(String id, item) {

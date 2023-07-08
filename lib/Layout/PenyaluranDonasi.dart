@@ -149,6 +149,7 @@ class _PenyaluranDonasiState extends State<PenyaluranDonasi> {
                           int jumlah = int.parse(_jumlahController.text);
 
                           PenyaluranDonasiClass donasi = PenyaluranDonasiClass(
+                      
                             jumlah: jumlah,
                             tujuan: tujuan,
                             tanggal: tanggal,

@@ -125,7 +125,9 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: 10,
               ),
-              GestureDetector(onTap: _login, 
+              GestureDetector(onTap: (){
+                   Navigator.pushReplacementNamed(context, '/register');
+              },
               child: Text(
                 "Belum punya akun?",
                 
@@ -217,7 +219,7 @@ class _LoginPageState extends State<LoginPage> {
             );
           },
         );
-        Navigator.pushReplacementNamed(context, '/cek');
+        Navigator.pushReplacementNamed(context, '/home');
       } else {
         showDialog(
           context: context,

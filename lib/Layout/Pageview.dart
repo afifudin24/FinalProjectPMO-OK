@@ -13,7 +13,7 @@ class _PageViewState extends State<PageViewScreen> {
   List<Barang> dataBarang = [];
   var vsb = false;
   BarangService barangController = BarangService();
-  final PageController _pageController = PageController(initialPage: 1);
+  final PageController _pageController = PageController(initialPage: 0);
 
   Future<void> _getBarang() async {
     List<Barang> dtBarang = await barangController.getItems("546");
@@ -28,7 +28,7 @@ class _PageViewState extends State<PageViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (dataBarang.length < 2) {
+    if (dataBarang.length < 3) {
       return Container(
         height: 200,
         width: double.infinity,
@@ -52,7 +52,7 @@ class _PageViewState extends State<PageViewScreen> {
         visible: vsb,
         child: PageView.builder(
           controller: _pageController,
-          itemCount: 2,
+          itemCount: 3,
           itemBuilder: (context, index) {
             return elemenPage(dataBarang[index]);
           },

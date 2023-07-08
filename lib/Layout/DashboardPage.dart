@@ -11,6 +11,7 @@ import 'package:kasir_euy/ClassService.dart/BarangService.dart';
 import 'package:kasir_euy/ClassService.dart/LaporanPemasukanService.dart';
 import 'package:kasir_euy/ClassService.dart/LaporanPenjualanService.dart';
 import 'package:kasir_euy/Layout/pageview.dart';
+import 'package:kasir_euy/main.dart';
 
 import '../Class/BarangClass.dart';
 import '../Class/TokoClass.dart';
@@ -60,11 +61,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _getStok();
     _getMember();
     _getSaldo();
+    print(currentUser!.uid.toString());
   }
 
   Future<void> _loadUsers() async {
-    print("lah");
-    List<Toko> tokos = await controller.getDataItems("123");
+    List<Toko> tokos = await controller.getDataItems(currentUser!.uid.toString());
     setState(() {
       namaAdmin = tokos[0].adminToko;
       print(tokos[0].adminToko);
@@ -72,7 +73,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Future<void> _getJual() async {
-    List<LaporanPenjualan> _jual = await penjualancontroller.getData("daf");
+    List<LaporanPenjualan> _jual = await penjualancontroller.getData(currentUser!.uid.toString());
     setState(() {
       jual = _jual;
       print(jual.toList());
@@ -84,7 +85,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Future<void> _getStok() async {
-    List<Barang> _stok = await barangcontroller.getItems("546");
+    List<Barang> _stok = await barangcontroller.getItems(currentUser!.uid.toString());
     setState(() {
       stok = _stok;
       for (int i = 0; i < _stok.length; i++) {
@@ -94,7 +95,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Future<void> _getMember() async {
-    List<Member> _members = await membercontroller.getMembersData("123");
+    List<Member> _members = await membercontroller.getMembersData(currentUser!.uid.toString());
     setState(() {
       members = _members;
       member = _members.length;
@@ -103,7 +104,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Future<void> _getSaldo() async {
-    List<LaporanPemasukan> _saldo = await pemasukancontroller.getData("123");
+    List<LaporanPemasukan> _saldo = await pemasukancontroller.getData(currentUser!.uid.toString());
     setState(() {
       saldos = _saldo;
       for (int i = 0; i < _saldo.length; i++) {

@@ -45,9 +45,9 @@ class BarangService {
     return documentIds;
   }
 
-  Future<void> addItem(Barang item) {
-    String randomId = FirebaseFirestore.instance.collection('barang').doc().id;
-    return barangCollection.doc(randomId).set(item.toMap());
+  Future<void> addItem(String id, Barang item) {
+  
+    return barangCollection.doc(id).set(item.toMap());
   }
 
   Future<void> updateItem(String id, item) {

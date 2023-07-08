@@ -5,7 +5,6 @@ class Toko {
   String email;
   String namatoko;
   String mottotoko;
-
   String adminToko;
   String urlImage;
   String alamat;
@@ -38,7 +37,7 @@ class Toko {
       mottotoko: map['mottotoko'],
       adminToko: map['adminToko'],
       urlImage: map['urlImage'],
-      alamat: map['alamatToko'],
+      alamat: map['alamat'],
     );
   }
 }

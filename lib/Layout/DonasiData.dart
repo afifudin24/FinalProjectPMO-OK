@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:kasir_euy/Class/DonasiClass.dart';
 import 'package:kasir_euy/ClassService.dart/DonasiService.dart';
 import 'package:kasir_euy/ClassService.dart/TokoService.dart';
+import 'package:kasir_euy/main.dart';
 
 import '../Class/TokoClass.dart';
 
@@ -29,7 +30,7 @@ class _DonasiData extends State<DonasiData> {
 
   Future<void> _loadData() async {
     print("lah");
-    List<Donasi> donasis = await donasicontroller.getItems('dafa');
+    List<Donasi> donasis = await donasicontroller.getItems(currentUser!.uid.toString());
     setState(() {
       _donasi = donasis;
     });
@@ -69,7 +70,7 @@ class _DonasiData extends State<DonasiData> {
                 kdDonasi: '128;;klk3gjh',
                 email: 'Itemoojjlk 1hgjh',
          
-                idToko: 'dafa',
+                idToko: currentUser!.uid,
                 jumlah: 0,
                 namadonatur: "Afif",
                 noTelp: "123");

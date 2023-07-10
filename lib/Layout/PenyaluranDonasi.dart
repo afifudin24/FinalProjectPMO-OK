@@ -6,6 +6,8 @@ import 'package:kasir_euy/ClassService.dart/PenyaluranDonasiService.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kasir_euy/Layout/HomeScreen.dart';
 import 'package:kasir_euy/Layout/MenuLayout.dart';
+import 'package:kasir_euy/Layout/komposisi.dart';
+import 'package:kasir_euy/main.dart';
 
 class PenyaluranDonasi extends StatefulWidget {
   @override
@@ -15,7 +17,7 @@ class PenyaluranDonasi extends StatefulWidget {
 class _PenyaluranDonasiState extends State<PenyaluranDonasi> {
   TextEditingController _jumlahController = TextEditingController();
   TextEditingController _tujuanController = TextEditingController();
-  TextEditingController _tanggalController = TextEditingController();
+  // TextEditingController _tanggalController = TextEditingController();
   PenyaluranDonasiService salur = PenyaluranDonasiService();
   String outputMessage = ''; // Variabel untuk menyimpan pesan output
   File? imageFile;
@@ -71,28 +73,13 @@ class _PenyaluranDonasiState extends State<PenyaluranDonasi> {
                         fillColor: Colors.white,
                         labelText: 'Tujuan',
                         border: OutlineInputBorder(),
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 12.0),
                       ),
                     ),
                   ),
-                  SizedBox(height: 5.0),
-                  Container(
-                    width: double.infinity,
-                    child: TextFormField(
-                      controller: _tanggalController,
-                      style: TextStyle(fontSize: 14.0),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'Tanggal',
-                        border: OutlineInputBorder(),
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 5.0),
+                  SizedBox(height: 10.0),
+                  SizedBox(height: 10.0),
                   Container(
                     width: double.infinity,
                     child: TextFormField(
@@ -103,12 +90,12 @@ class _PenyaluranDonasiState extends State<PenyaluranDonasi> {
                         fillColor: Colors.white,
                         labelText: 'Jumlah',
                         border: OutlineInputBorder(),
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 12.0),
                       ),
                     ),
                   ),
-                  SizedBox(height: 16.0),
+                  SizedBox(height: 20.0),
                   Container(
                     width: double.infinity,
                     child: Align(
@@ -117,7 +104,10 @@ class _PenyaluranDonasiState extends State<PenyaluranDonasi> {
                         onPressed: () {
                           pickImage();
                         },
-                        icon: Icon(Icons.cloud_upload),
+                        icon: Icon(
+                          Icons.cloud_upload,
+                          color: primaryColor,
+                        ),
                         label: Text('Upload Foto'),
                       ),
                     ),
@@ -145,31 +135,35 @@ class _PenyaluranDonasiState extends State<PenyaluranDonasi> {
                         onPressed: () {
                           // Proses donasi
                           String tujuan = _tujuanController.text;
-                          String tanggal = _tanggalController.text;
+
                           int jumlah = int.parse(_jumlahController.text);
+                          DateTime now = DateTime.now();
+                          Timestamp timestamp = Timestamp.fromDate(now);
 
                           PenyaluranDonasiClass donasi = PenyaluranDonasiClass(
-                      
+                            idtoko: currentUser!.uid.toString(),
                             jumlah: jumlah,
                             tujuan: tujuan,
-                            tanggal: tanggal,
+                            tanggal: timestamp,
                             urlImage: imageFile != null ? imageFile!.path : '',
                           );
 
                           salur.addItem(donasi).then((result) {
                             print("oke");
                             // Mengatur pesan output
-                           Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-
-        builder: (context) => HomePage(),
-      ),
-    );
-                            setState(() {
-                              outputMessage =
-                                  'Donasi telah disalurkan.\nTujuan: $tujuan\nTanggal: $tanggal\nJumlah: $jumlah';
-                            });
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text(
+                                      'Penyaluran donasi dengan jumlah $jumlah telah berhasil')),
+                            );
+                            _jumlahController.clear();
+                            _tujuanController.clear();
+                            // Navigator.pushReplacement(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => HomePage(),
+                            //   ),
+                            // );
                           }).catchError((error) {
                             // Mengatur pesan output jika terjadi error
                             setState(() {
@@ -180,30 +174,16 @@ class _PenyaluranDonasiState extends State<PenyaluranDonasi> {
                         },
                         child: Text('Salurkan'),
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.blue,
+                          primary: secondaryColor,
                           textStyle: TextStyle(
                             fontSize: 16.0,
                           ),
-                         minimumSize: Size(150.0, 50.0),
+                          minimumSize: Size(150.0, 50.0),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 20.0),
-                  Container(
-                    padding: EdgeInsets.all(10.0),
-                    color: Colors.grey[300],
-                    child: Center(
-                      child: Text(
-                        outputMessage,
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
+                  SizedBox(height: 10.0),
                 ],
               ),
             ),

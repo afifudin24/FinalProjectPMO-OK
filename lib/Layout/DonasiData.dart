@@ -29,8 +29,8 @@ class _DonasiData extends State<DonasiData> {
   }
 
   Future<void> _loadData() async {
-    print("lah");
-    List<Donasi> donasis = await donasicontroller.getItems(currentUser!.uid.toString());
+    List<Donasi> donasis =
+        await donasicontroller.getItems(currentUser!.uid.toString());
     setState(() {
       _donasi = donasis;
     });
@@ -51,38 +51,16 @@ class _DonasiData extends State<DonasiData> {
 
   @override
   Widget build(BuildContext context) {
-  
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Color.fromRGBO(33, 64, 100, 1),
-
-        title: Text('Daftar Donasi', style: TextStyle(
-          color: Colors.white
-        ),),
+        title: Text(
+          'Daftar Donasi',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: buildView(),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          setState(() {
-            Donasi newItem = Donasi(
-                kdDonasi: '128;;klk3gjh',
-                email: 'Itemoojjlk 1hgjh',
-         
-                idToko: currentUser!.uid,
-                jumlah: 0,
-                namadonatur: "Afif",
-                noTelp: "123");
-                 String randomId = FirebaseFirestore.instance.collection('donasi').doc().id;
-            donasicontroller.addItem(randomId, newItem);
-            print("okbng");
-           
-          });
-           _loadData();
-            refreshPage();
-        },
-      ),
     );
   }
 
@@ -91,50 +69,60 @@ class _DonasiData extends State<DonasiData> {
       itemCount: _donasi.length,
       itemBuilder: (context, index) {
         Donasi donasi = _donasi[index];
+        DateTime tanggal = donasi.tanggal.toDate();
+        String waktu = '${tanggal.day}/${tanggal.month}/${tanggal.year}';
 
         return Column(
           children: [
-            ListTile(iconColor: Colors.red,
-            contentPadding: EdgeInsets.only(left : 10, right: 10),
-            
+            ListTile(
+              iconColor: Colors.red,
+              contentPadding: EdgeInsets.only(left: 10, right: 10),
               title: Text(donasi.namadonatur),
-              subtitle: Text(donasi.jumlah.toString()),
+              subtitle: Text(waktu),
+              leading: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(donasi.jumlah.toString()),
+                ],
+              ),
               trailing: IconButton(
                 icon: Icon(Icons.delete),
                 onPressed: () {
                   showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-            title: Text('Konfirmasi'),
-            content: Text('Apakah Anda yakin?'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Batal'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('Hapus'),
-                onPressed: () {
-                  donasicontroller.deleteItem(_id[index]);
-                 
-                  refreshPage();
-             
-                },
-              ),
-            ],
-      );
-    },
-  );
-
-                  
-              
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Konfirmasi'),
+                        content: Text('Apakah Anda yakin?'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text('Batal'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            child: Text('Hapus'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              donasicontroller
+                                  .deleteItem(_id[index])
+                                  .then((value) {
+                                print("oke");
+                              }).catchError((onError) {
+                                print(onError);
+                              });
+                              refreshPage();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
               ),
             ),
-              Divider(),
+            Divider(),
           ],
         );
       },
@@ -142,9 +130,12 @@ class _DonasiData extends State<DonasiData> {
   }
 
   void refreshPage() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => DonasiData()),
-    );
+    setState(() {
+      _loadData();
+      _loadID();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Hapus Donasi Berhasil')),
+      );
+    });
   }
 }

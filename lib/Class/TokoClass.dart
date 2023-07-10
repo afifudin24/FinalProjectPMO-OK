@@ -8,6 +8,7 @@ class Toko {
   String adminToko;
   String urlImage;
   String alamat;
+  int saldo;
 
   Toko(
       {required this.idtoko,
@@ -16,7 +17,8 @@ class Toko {
       required this.mottotoko,
       required this.adminToko,
       required this.alamat,
-      required this.urlImage});
+      required this.urlImage,
+      required this.saldo});
   Map<String, dynamic> toMap() {
     return {
       'idtoko': idtoko,
@@ -26,6 +28,7 @@ class Toko {
       'adminToko': adminToko,
       'urlImage': urlImage,
       'alamat': alamat,
+      'saldo': saldo,
     };
   }
 
@@ -38,6 +41,7 @@ class Toko {
       adminToko: map['adminToko'],
       urlImage: map['urlImage'],
       alamat: map['alamat'],
+      saldo: map['saldo'],
     );
   }
 }

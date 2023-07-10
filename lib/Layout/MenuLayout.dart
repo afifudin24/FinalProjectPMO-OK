@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kasir_euy/Class/DonasiClass.dart';
 import 'package:kasir_euy/Layout/BarangList.dart';
 import 'package:kasir_euy/Layout/DonasiData.dart';
+import 'package:kasir_euy/Layout/Memberlayout.dart';
 import 'package:kasir_euy/Layout/PenyaluranDonasi.dart';
+import 'komposisi.dart';
 
 class KasirMenuPage extends StatelessWidget {
   @override
@@ -20,6 +23,7 @@ class KasirMenuPage extends StatelessWidget {
         MaterialPageRoute(builder: (context) => PenyaluranDonasi()),
       );
     }
+
     void pindahDonasi() {
       Navigator.push(
         context,
@@ -27,16 +31,38 @@ class KasirMenuPage extends StatelessWidget {
       );
     }
 
-    return GridView.count(
-      crossAxisCount: 2,
-      children: [
-        _buildMenuItem(Icons.inventory, 'Stok Barang', pindah),
-        _buildMenuItem(Icons.person, 'Member', '/login'),
-        _buildMenuItem(Icons.money, 'Donasi', pindahDonasi),
-        _buildMenuItem(Icons.stacked_line_chart, 'Laporan Penjualan', '/home'),
-        _buildMenuItem(Icons.send_to_mobile, 'Penyaluran Donasi', pindahSalurkanDonasi),
-        _buildMenuItem(Icons.stacked_line_chart, 'Laporan Penjualan', '/home'),
-      ],
+    void pindahMember() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => CrudMemberClass()),
+      );
+    }
+
+    return Center(
+      child: Container(
+        alignment: Alignment.center,
+        height: 700,
+        child: Center(
+          child: Align(
+            alignment: Alignment.center,
+            child: GridView.count(
+              mainAxisSpacing: 10,
+              crossAxisCount: 2,
+              children: [
+                _buildMenuItem(Icons.inventory, 'Stok Barang', pindah),
+                _buildMenuItem(Icons.person, 'Member', pindahMember),
+                _buildMenuItem(Icons.money, 'Donasi', pindahDonasi),
+                _buildMenuItem(
+                    Icons.stacked_line_chart, 'Laporan Penjualan', '/home'),
+                _buildMenuItem(Icons.send_to_mobile, 'Penyaluran Donasi',
+                    pindahSalurkanDonasi),
+                _buildMenuItem(
+                    Icons.view_comfy_alt_outlined, 'Supplier', '/home'),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -55,12 +81,14 @@ class KasirMenuPage extends StatelessWidget {
             Icon(
               iconData,
               size: 48.0,
-              color: Colors.blue,
+              color: primaryColor,
             ),
             SizedBox(height: 8.0),
             Text(
               title,
-              style: TextStyle(fontSize: 18.0),
+              style: GoogleFonts.poppins(
+                fontSize: 18,
+              ),
             ),
           ],
         ),

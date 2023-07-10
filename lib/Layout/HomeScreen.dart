@@ -17,14 +17,21 @@ List menu = [DashboardScreen(), TransaksiScreen(), KasirMenuPage(), Profil()];
 List visibilitasLeading = [false, false, false, true];
 List title = ["Selamat Datang, ", "Transaksi", "Menu", "Profil"];
 var namatoko = "";
+var urlImage = " ";
+
+// ignore: must_be_immutable
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final int laman;
+  final Function? MyFunction;
+  // ignore: non_constant_identifier_names
+  HomePage({super.key, this.laman = 0, this.MyFunction});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  late int _selectedNavbar;
   final TextEditingController conNama = TextEditingController();
   final TextEditingController conEmail = TextEditingController();
   final TextEditingController conMotto = TextEditingController();
@@ -47,16 +54,23 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void initState() {
+    super.initState();
+    _selectedNavbar = widget.laman;
+    initData();
+    _getUser();
+  }
 
   var nama = "";
   final _formKey = GlobalKey<FormState>();
-  int _selectedNavbar = 0;
+  // int _selectedNavbar = _variableName;
   var visRumah = false;
   var visLengkap = false;
 
   void _changeSelectedNavBar(int index) {
     setState(() {
       _selectedNavbar = index;
+      print(_selectedNavbar);
     });
   }
 
@@ -69,11 +83,6 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  void initState() {
-    super.initState();
-    initData();
-    _getUser();
-  }
   //   Future<void> _simpan() async {
   //   List<Toko> tokoIni = await tokoController.getDataItems(currentUser!.uid.toString());
   //   setState(() {
@@ -87,12 +96,14 @@ class _HomePageState extends State<HomePage> {
   // }
 
   Future<void> _getUser() async {
-    List<Toko> tokoIni = await tokoController.getDataItems(currentUser!.uid.toString());
+    List<Toko> tokoIni =
+        await tokoController.getDataItems(currentUser!.uid.toString());
     setState(() {
       toko = tokoIni;
       var admin = toko[0].adminToko;
       title[0] = "Selamat datang, $admin";
       namatoko = toko[0].namatoko;
+      urlImage = toko[0].urlImage;
       print(toko[0].adminToko);
       print(namatoko);
     });
@@ -138,6 +149,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _rumah() {
+    if (widget.MyFunction != null) {
+      setState(() {
+        widget.MyFunction!();
+      });
+    }
     return Scaffold(
         body: Container(
       color: warna,
@@ -249,7 +265,7 @@ class _HomePageState extends State<HomePage> {
                                             borderRadius:
                                                 BorderRadius.circular(5)),
                                         contentPadding: EdgeInsets.all(10),
-                                        label: Text("Motto Toko")),
+                                        label: Text("Alamat Toko")),
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         return 'Motto toko harus diisi';
@@ -285,20 +301,27 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           ),
-                           ElevatedButton(
-                                      style: ButtonStyle(
-                                          padding: MaterialStatePropertyAll(
-                                              EdgeInsetsDirectional.all(12)),
-                                          backgroundColor:
-                                              MaterialStatePropertyAll(
-                                                  Colors.orange)),
-                                      onPressed: () {
-                                     Toko data =    Toko(idtoko: currentUser!.uid.toString(), email: conEmail.text, namatoko: conNamaToko.text, mottotoko: conMotto.text, adminToko: conNama.text, alamat: conAlamat.text, urlImage: image);
-                                      tokoController.addItem(data);
-                                      Navigator.pushReplacementNamed(context, '/home');
-                                      },
-                                      child: Text("Simpan")),
-                                 
+                          ElevatedButton(
+                              style: ButtonStyle(
+                                  padding: MaterialStatePropertyAll(
+                                      EdgeInsetsDirectional.all(12)),
+                                  backgroundColor:
+                                      MaterialStatePropertyAll(Colors.orange)),
+                              onPressed: () {
+                                Toko data = Toko(
+                                    idtoko: currentUser!.uid.toString(),
+                                    email: conEmail.text,
+                                    namatoko: conNamaToko.text,
+                                    mottotoko: conMotto.text,
+                                    adminToko: conNama.text,
+                                    alamat: conAlamat.text,
+                                    urlImage: image,
+                                    saldo: 0);
+                                tokoController.addItem(data);
+                                Navigator.pushReplacementNamed(
+                                    context, '/home');
+                              },
+                              child: Text("Simpan")),
                         ]),
                   ),
                 ),
@@ -396,7 +419,7 @@ class _HomePageState extends State<HomePage> {
                 ],
                 type: BottomNavigationBarType.fixed,
                 currentIndex: _selectedNavbar,
-                selectedItemColor: Colors.blueGrey,
+                selectedItemColor: primaryColor,
                 unselectedItemColor: Colors.grey,
                 showUnselectedLabels: true,
                 onTap: _changeSelectedNavBar,

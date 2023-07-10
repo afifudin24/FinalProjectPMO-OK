@@ -8,9 +8,12 @@ import 'package:kasir_euy/Class/LaporanPemasukanClass.dart';
 import 'package:kasir_euy/Layout/AddTransaksi.dart';
 import '../Class/BarangClass.dart';
 import '../Class/LaporanPenjualanClass.dart';
+import '../Class/TokoClass.dart';
 import '../ClassService.dart/BarangService.dart';
 import '../ClassService.dart/LaporanPemasukanService.dart';
 import '../ClassService.dart/LaporanPenjualanService.dart';
+import '../ClassService.dart/TokoService.dart';
+import 'Donasilayout.dart';
 import 'komposisi.dart';
 import 'AddTransaksi.dart';
 import 'package:need_resume/need_resume.dart';
@@ -42,6 +45,7 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
   int totalbayar = 0;
   int kembalian = 0;
   String pdfFile = " ";
+  var lokasi;
   @override
   var kodemember = false;
   List<Map<String, dynamic>?> daftarBarang = [];
@@ -55,11 +59,11 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
   var visMulaiTransaksi = true;
   var visTable = true;
   var visTransaksi = false;
+  var tampilSimpanPDF = true;
+  var tampilBukaPDF = false;
   void initState() {
     super.initState();
     _getBarang();
-
-    print("OK");
   }
 
   TextEditingController conKdBarang = TextEditingController();
@@ -69,6 +73,7 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
   TextEditingController _nominal = TextEditingController();
   final FocusNode _qtyfocusNode = FocusNode();
   final FocusNode _kdfocusNode = FocusNode();
+  TokoService tokoController = TokoService();
   BarangService barangController = BarangService();
   LaporanPemasukanService pemasukanController = LaporanPemasukanService();
   LaporanPenjualanService penjualanController = LaporanPenjualanService();
@@ -76,7 +81,8 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
   List<Barang> dataBarang = [];
   int? hargaPer;
   Future<void> _getBarang() async {
-    List<Barang> barangs = await barangController.getItems(currentUser!.uid.toString());
+    List<Barang> barangs =
+        await barangController.getItems(currentUser!.uid.toString());
     setState(() {
       dataBarang = barangs;
     });
@@ -97,208 +103,261 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
     }
   }
 
-  
   Future<void> _inputDataPemasukan() async {
-  
-
-     setState(() {
-            int? ttlhrga = totalSeluruhHarga;
-      int jml = daftarBarang
-          .map((data) => data?['qty']!)
-          .reduce((a, b) => a + b);
+    setState(() {
+      int? ttlhrga = totalSeluruhHarga;
+      int jml =
+          daftarBarang.map((data) => data?['qty']!).reduce((a, b) => a + b);
       DateTime now = DateTime.now();
-       Timestamp timestamp = Timestamp.fromDate(now);
-        String randomId = FirebaseFirestore.instance.collection('laporanPemasukan').doc().id;
-     LaporanPemasukan data =   LaporanPemasukan(idToko: "123", idTransaksi: randomId, jumlBarang: jml, totalHarga: ttlHarga, date: timestamp);
-       pemasukanController.addItem(randomId, data).then((result) {
-    // Blok then akan dijalankan jika operasi berhasil
-    print("oke");
-     setState(() {
-      cek = true;
+      Timestamp timestamp = Timestamp.fromDate(now);
+      String randomId =
+          FirebaseFirestore.instance.collection('laporanPemasukan').doc().id;
+      LaporanPemasukan data = LaporanPemasukan(
+          idToko: currentUser!.uid.toString(),
+          idTransaksi: randomId,
+          jumlBarang: jml,
+          totalHarga: ttlHarga,
+          date: timestamp);
+      pemasukanController.addItem(randomId, data).then((result) {
+        // Blok then akan dijalankan jika operasi berhasil
+        print("oke");
+        setState(() {
+          cek = true;
+        });
+      }).catchError((error) {
+        // Blok catchError akan dijalankan jika terjadi kesalahan
+        print('Terjadi kesalahan: $error');
+        setState(() {
+          cek = false;
+        });
+      });
     });
-  }).catchError((error) {
-    // Blok catchError akan dijalankan jika terjadi kesalahan
-    print('Terjadi kesalahan: $error');
-     setState(() {
-      cek = false;
-    });
-  });
-
-  });
-  
-}
- 
+  }
 
   Future<void> _inputDataPenjualan() async {
-  daftarBarang.forEach((element) {
-      DateTime now = DateTime.now();
-       Timestamp timestamp = Timestamp.fromDate(now);
-        String randomId = FirebaseFirestore.instance.collection('laporanPenjualan').doc().id;
+    daftarBarang.forEach(
+      (element) {
+        DateTime now = DateTime.now();
+        Timestamp timestamp = Timestamp.fromDate(now);
+        String randomId =
+            FirebaseFirestore.instance.collection('laporanPenjualan').doc().id;
         daftarBarang.forEach((element) {
-          LaporanPenjualan data = LaporanPenjualan(idJual: randomId, kdbarang: element?['kodebarang'], namaBarang: element?['namabarang'], idToko: "123", totalJual: element?['qty'], date: timestamp);
+          LaporanPenjualan data = LaporanPenjualan(
+              idJual: randomId,
+              kdbarang: element?['kodebarang'],
+              namaBarang: element?['namabarang'],
+              idToko: currentUser!.uid.toString(),
+              totalJual: element?['qty'],
+              date: timestamp);
           penjualanController.addItem(randomId, data).then((result) {
-    // Blok then akan dijalankan jika operasi berhasil
-    print("sip");
-    setState(() {
-      cek = true;
-    });
-  }).catchError((error) {
-    // Blok catchError akan dijalankan jika terjadi kesalahan
-    print('Terjadi kesalahan: $error');
-      setState(() {
-      cek = false;
-    });
-  });
-;
-        
+            // Blok then akan dijalankan jika operasi berhasil
+            print("sip");
+            setState(() {
+              cek = true;
+            });
+          }).catchError((error) {
+            // Blok catchError akan dijalankan jika terjadi kesalahan
+            print('Terjadi kesalahan: $error');
+            setState(() {
+              cek = false;
+            });
+          });
+          ;
         });
-
-        
-  },);
-  
-}
- 
-  Future<void> _updateTerjual() async {
-  daftarBarang.forEach((element) {
-    var stok;
-    var terjual;
-        daftarBarang.forEach((element) async {
-           List<Barang> barangPilih = await barangController.getData(element?['kodebarang']);
-         stok = barangPilih[0].stok - element?['qty'];
-         terjual = barangPilih[0].terjual + element?['qty'];
-          FirebaseFirestore.instance
-      .collection('barang') // Ganti dengan nama koleksi sesuai dengan struktur Firestore Anda
-      .doc(element?['kodebarang']) // Ganti dengan ID produk yang ingin Anda update
-      .update({'stok': stok}) // Update properti 'stock' dengan nilai baru
-      .then((value) {
-    print('Stok berhasil diupdate');
-      setState(() {
-      cek = true;
-    });
-  })
-  .catchError((error) {
-    print('Terjadi kesalahan: $error');
-     setState(() {
-      cek = false;
-    });
-  });
-          
-          FirebaseFirestore.instance
-      .collection('barang') // Ganti dengan nama koleksi sesuai dengan struktur Firestore Anda
-      .doc(element?['kodebarang']) // Ganti dengan ID produk yang ingin Anda update
-      .update({'terjual': terjual}) // Update properti 'stock' dengan nilai baru
-      .then((value) {
-    print('Terjual berhasil diupdate');
-      setState(() {
-      cek = true;
-    });
-  })
-  .catchError((error) {
-    print('Terjadi kesalahan: $error');
-     setState(() {
-      cek = false;
-    });
-  });
-          
-  });
-;
-        
-        });
-
-        
+      },
+    );
   }
- 
+
+  Future<void> _updateSaldo() async {
+    print(currentUser!.uid.toString());
+    var toko;
+    var saldo;
+    var saldoTerkini;
+
+    List<Toko> tokoPilih =
+        await tokoController.getDataItems(currentUser!.uid.toString());
+    toko = tokoPilih[0];
+    saldo = tokoPilih[0].saldo;
+    saldoTerkini = saldo + totalSeluruhHarga;
+    CollectionReference collectionRef =
+        FirebaseFirestore.instance.collection('toko');
+    Query query =
+        collectionRef.where('idtoko', isEqualTo: currentUser!.uid.toString());
+    // Data yang ingin diperbarui
+    Map<String, dynamic> data = {
+      'saldo': saldoTerkini,
+      // Tambahkan field dan nilai baru sesuai kebutuhan
+    };
+    // Memperbarui data di Firestore
+    query.get().then((querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        doc.reference
+            .update(data)
+            .then((value) => print('Saldo berhasil diperbarui'))
+            .catchError((error) => print('Terjadi error: $error'));
+      });
+    });
+
+    // FirebaseFirestore.instance
+    //     .collection(
+    //         'toko') // Ganti dengan nama koleksi sesuai dengan struktur Firestore Anda
+    //     .doc(currentUser!.uid
+    //         .toString()) // Ganti dengan ID produk yang ingin Anda update
+    //     .update({
+    //   'saldo': saldoTerkini
+    // }) // Update properti 'stock' dengan nilai baru
+    //     .then((value) {
+    //   print('Saldo berhasil diupdate');
+    //   setState(() {
+    //     cek = true;
+    //   });
+    // }).catchError((error) {
+    //   print('Terjadi kesalahan: $error');
+    //   setState(() {
+    //     cek = false;
+    //   });
+    // });
+  }
+
+  Future<void> _updateTerjual() async {
+    daftarBarang.forEach((element) {
+      var stok;
+      var terjual;
+      daftarBarang.forEach((element) async {
+        List<Barang> barangPilih =
+            await barangController.getData(element?['kodebarang']);
+        stok = barangPilih[0].stok - element?['qty'];
+        terjual = barangPilih[0].terjual + element?['qty'];
+        FirebaseFirestore.instance
+            .collection(
+                'barang') // Ganti dengan nama koleksi sesuai dengan struktur Firestore Anda
+            .doc(element?[
+                'kodebarang']) // Ganti dengan ID produk yang ingin Anda update
+            .update({'stok': stok}) // Update properti 'stock' dengan nilai baru
+            .then((value) {
+          print('Stok berhasil diupdate');
+          setState(() {
+            cek = true;
+          });
+        }).catchError((error) {
+          print('Terjadi kesalahan: $error');
+          setState(() {
+            cek = false;
+          });
+        });
+
+        FirebaseFirestore.instance
+            .collection(
+                'barang') // Ganti dengan nama koleksi sesuai dengan struktur Firestore Anda
+            .doc(element?[
+                'kodebarang']) // Ganti dengan ID produk yang ingin Anda update
+            .update({
+          'terjual': terjual
+        }) // Update properti 'stock' dengan nilai baru
+            .then((value) {
+          print('Terjual berhasil diupdate');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Transaksi Berhasil')),
+          );
+          setState(() {
+            cek = true;
+          });
+        }).catchError((error) {
+          print('Terjadi kesalahan: $error');
+          setState(() {
+            cek = false;
+          });
+        });
+      });
+      ;
+    });
+  }
 
   //savePdf
-Future<void> savePdf() async {
-  final pdf = pw.Document();
-  DateTime now = DateTime.now();
-  String formattedDate = '${now.day}-${now.month}-${now.year}';
+  Future<void> savePdf() async {
+    final pdf = pw.Document();
+    DateTime now = DateTime.now();
+    String formattedDate = '${now.day}-${now.month}-${now.year}';
 
+    // Membuat List<List<String>> dari data
+    final List<List<String?>> tableData = daftarBarang.map((row) {
+      return [
+        row?['qty'].toString(),
+        row?['kodebarang'].toString(),
+        row?['namabarang'].toString(),
+        row?['hargaperbarang'].toString(),
+        row?['totalharga'].toString(),
+      ];
+    }).toList();
 
-
-  // Membuat List<List<String>> dari data
-  final List<List<String?>> tableData = daftarBarang.map((row) {
-    return [
-      row?['qty'].toString(),
-      row?['kodebarang'].toString(),
-      row?['namabarang'].toString(),
-      row?['hargaperbarang'].toString(),
-      row?['totalharga'].toString(),
-    ];
-  }).toList();
-
-     // Tambahkan header tabel dengan tab
-  // final List<String> headerRow = ['QTY\tKode Barang\tNama Barang\tHarga Barang\tTotal Harga'];
-  // tableData.insert(0, headerRow);
-  // Tambahkan konten PDF
-  pdf.addPage(
-    pw.Page(
-      build: (pw.Context context) {
-        return pw.Container(
-          child: pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-            pw.Text(namatoko),
-            pw.SizedBox(
-              height: 10,
-            ),
-            pw.Text(now.toString()),
-            pw.SizedBox(height: 10),
-            pw.Table.fromTextArray( 
-          context: context,
-          data: tableData,
-          headers: <String>[
-            'QTY',
-            'Kode Barang',
-            'Nama Barang',
-            'Harga Barang',
-            'Total Harga',
-            // Daftar judul kolom di sini
-          ],
-          headerCount: 1,
-          border: pw.TableBorder.all(),
-          headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-          cellAlignment: pw.Alignment.centerLeft,
-          cellAlignments: {
-            0: pw.Alignment.center,
-            1: pw.Alignment.center,
-            2: pw.Alignment.center,
-            3: pw.Alignment.center,
-            4: pw.Alignment.center,
-          },
-        ),
-         pw.SizedBox(height: 10),
-        pw.Text("Total Harga : $totalSeluruhHarga"),
-        pw.SizedBox(height: 10),
-        pw.Text("Total Bayar : $totalbayar"),
-        pw.SizedBox(height: 10),
-        pw.Text("Total Kembalian : $kembalian"),
-        pw.SizedBox(height: 10),
-
-            ]
-            
-    )
-    
+    // Tambahkan header tabel dengan tab
+    // final List<String> headerRow = ['QTY\tKode Barang\tNama Barang\tHarga Barang\tTotal Harga'];
+    // tableData.insert(0, headerRow);
+    // Tambahkan konten PDF
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Container(
+              child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                pw.Text(namatoko),
+                pw.SizedBox(
+                  height: 10,
+                ),
+                pw.Text(now.toString()),
+                pw.SizedBox(height: 10),
+                pw.Table.fromTextArray(
+                  context: context,
+                  data: tableData,
+                  headers: <String>[
+                    'QTY',
+                    'Kode Barang',
+                    'Nama Barang',
+                    'Harga Barang',
+                    'Total Harga',
+                    // Daftar judul kolom di sini
+                  ],
+                  headerCount: 1,
+                  border: pw.TableBorder.all(),
+                  headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                  cellAlignment: pw.Alignment.centerLeft,
+                  cellAlignments: {
+                    0: pw.Alignment.center,
+                    1: pw.Alignment.center,
+                    2: pw.Alignment.center,
+                    3: pw.Alignment.center,
+                    4: pw.Alignment.center,
+                  },
+                ),
+                pw.SizedBox(height: 10),
+                pw.Text("Total Harga : $totalSeluruhHarga"),
+                pw.SizedBox(height: 10),
+                pw.Text("Total Bayar : $totalbayar"),
+                pw.SizedBox(height: 10),
+                pw.Text("Total Kembalian : $kembalian"),
+                pw.SizedBox(height: 10),
+              ]));
+        },
+      ),
     );
-    },
-    ),
-  );            
-   
 
-  // Dapatkan path penyimpanan di perangkat
-  final directory = await getExternalStorageDirectory();
-  final path = '${directory?.path}/transaksi-$formattedDate.pdf';
+    // Dapatkan path penyimpanan di perangkat
+    final directory = await getExternalStorageDirectory();
+    final path = '${directory?.path}/transaksi-$formattedDate.pdf';
 
-  // Simpan file PDF di path yang ditentukan
-  final file = File(path);
-  await file.writeAsBytes(await pdf.save());
+    lokasi = path;
+    print(lokasi);
 
-  // Tampilkan notifikasi keberhasilan
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text('File PDF disimpan di: $path')),
-  );
-}
+    // Simpan file PDF di path yang ditentukan
+    final file = File(path);
+    await file.writeAsBytes(await pdf.save());
+
+    // Tampilkan notifikasi keberhasilan
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('File PDF disimpan di: $path')),
+    );
+  }
 
 //buka PDF
   Future<void> openPDF(String filePath) async {
@@ -318,8 +377,10 @@ Future<void> savePdf() async {
   void _hapusDaftarBarang(List<Map<String, dynamic>?> daftarBarang, String kd) {
     setState(() {
       daftarBarang.removeWhere((data) => data?['kodebarang'] == kd);
+      if (daftarBarang.isEmpty) {
+        tampilProses = false;
+      }
     });
-    Navigator.pop(context);
   }
 
   void _updateDaftarBarang(
@@ -333,7 +394,6 @@ Future<void> savePdf() async {
         });
       }
     });
-    Navigator.pop(context);
   }
 
   void ubahData(String nama, harga, kd, stok) {
@@ -381,31 +441,10 @@ Future<void> savePdf() async {
     );
   }
 
-  void dispose() {
-    super.dispose();
-  }
-
-  void updateAutofillAnchor(BuildContext context) {
-    const platform = MethodChannel('android/view/autofill');
-
-    // Dapatkan informasi halaman aktif
-    final routeName = ModalRoute.of(context)?.settings.name;
-
-    if (routeName != null) {
-      // Kirim permintaan ke kode platform Android untuk memperbarui anchor Autofill
-      platform.invokeMethod('updateAutofillAnchor', {'anchor': routeName});
-    }
-  }
-
   void _ubahNilai(String nilai) {
     namaBrg = nilai;
     print(namaBrg);
   }
-
-  // void dispose() {
-  //   conKdBarang.dispose();
-  //   super.dispose();
-  // }
 
   void _tambahKeDaftar(
       String kd, String nmbrg, int hrgpr, int totalHarga, int qty) {
@@ -460,6 +499,7 @@ Future<void> savePdf() async {
                       backgroundColor: MaterialStatePropertyAll(Colors.green)),
                   onPressed: () {
                     _updateDaftarBarang(daftarBarang, kdBarang);
+                    Navigator.of(context).pop();
                   },
                   icon: Icon(Icons.edit_square),
                   label: Text("Update")),
@@ -468,6 +508,7 @@ Future<void> savePdf() async {
                       backgroundColor: MaterialStatePropertyAll(Colors.red)),
                   onPressed: () {
                     _hapusDaftarBarang(daftarBarang, kdBarang);
+                    Navigator.of(context).pop();
                   },
                   icon: Icon(Icons.delete_outlined),
                   label: Text("Hapus")),
@@ -811,7 +852,6 @@ Future<void> savePdf() async {
                           controller: conKdBarang,
                           focusNode: _kdfocusNode,
                           decoration: InputDecoration(
-                            
                             labelStyle: TextStyle(
                               color: Colors.grey,
                             ),
@@ -825,7 +865,6 @@ Future<void> savePdf() async {
                             filled: true,
                             contentPadding: EdgeInsets.all(7),
                             border: OutlineInputBorder(),
-                            
                             label: Text("Kode Barang"),
                           ),
                         ),
@@ -1160,16 +1199,33 @@ Future<void> savePdf() async {
                                     ),
                                   ),
                                   actions: [
-                                    ElevatedButton.icon(
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.green)),
-                                        onPressed: () {
-                                          savePdf();
-                                        },
-                                        icon: Icon(Icons.file_open_rounded),
-                                        label: Text("Simpan PDF")),
+                                    Visibility(
+                                      visible: tampilSimpanPDF,
+                                      child: ElevatedButton.icon(
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStatePropertyAll(
+                                                      Colors.green)),
+                                          onPressed: () {
+                                            savePdf();
+                                          },
+                                          icon: Icon(
+                                              Icons.file_download_outlined),
+                                          label: Text("Simpan PDF")),
+                                    ),
+                                    Visibility(
+                                      visible: tampilBukaPDF,
+                                      child: ElevatedButton.icon(
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStatePropertyAll(
+                                                      Colors.green)),
+                                          onPressed: () {
+                                            openPDF(lokasi);
+                                          },
+                                          icon: Icon(Icons.file_open_rounded),
+                                          label: Text("Buka PDF")),
+                                    ),
                                     ElevatedButton.icon(
                                         style: ButtonStyle(
                                             backgroundColor:
@@ -1178,21 +1234,87 @@ Future<void> savePdf() async {
                                         onPressed: () {
                                           _inputDataPemasukan();
                                           _inputDataPenjualan();
+                                          _updateSaldo();
                                           _updateTerjual();
-                                          if(cek == true){
+                                          if (cek == true) {
                                             setState(() {
                                               daftarBarang.clear();
                                               tampilProses = false;
-                                            });
-                                         
-                                            Navigator.pop(context);
-                                            Navigator.pop(context);
-                                           
-                                            ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text('Transaksi Berhasil')),
-  );
 
-                                          }else{
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    content: Container(
+                                                      height: 100,
+                                                      child: Column(children: [
+                                                        Text(
+                                                            "Donasikan Kembalian?"),
+                                                      ]),
+                                                    ),
+                                                    actions: [
+                                                      ElevatedButton.icon(
+                                                          label:
+                                                              Text("Donasikan"),
+                                                          onPressed: () {
+                                                            Navigator
+                                                                .pushAndRemoveUntil(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder: (context) =>
+                                                                      DonationApp(
+                                                                          jumlah:
+                                                                              kembalian)),
+                                                              (Route<dynamic>
+                                                                      route) =>
+                                                                  false,
+                                                            );
+                                                          },
+                                                          icon: Icon(Icons
+                                                              .check_rounded)),
+                                                      ElevatedButton.icon(
+                                                          label: Text(
+                                                              "Tidak Donasi"),
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              Navigator
+                                                                  .pushAndRemoveUntil(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            HomePage(
+                                                                              laman: 1,
+                                                                            )),
+                                                                (Route<dynamic>
+                                                                        route) =>
+                                                                    false,
+                                                              );
+                                                              showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (BuildContext
+                                                                        context) {
+                                                                  return AlertDialog(
+                                                                    title: Text(
+                                                                        'Transaksi'),
+                                                                    content: Text(
+                                                                        "Berhasil"),
+                                                                  );
+                                                                },
+                                                              );
+                                                            });
+                                                          },
+                                                          icon: Icon(
+                                                              Icons.cancel)),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            });
+                                          } else {
                                             print("Gagal");
                                           }
                                         },

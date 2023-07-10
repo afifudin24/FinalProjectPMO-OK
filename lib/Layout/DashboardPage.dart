@@ -36,6 +36,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool isHovered4 = false;
   var namaToko = "";
   var namaAdmin = " ";
+
   //angka jual
   var jual = [];
   int penjualan = 0;
@@ -65,27 +66,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Future<void> _loadUsers() async {
-    List<Toko> tokos = await controller.getDataItems(currentUser!.uid.toString());
+    List<Toko> tokos =
+        await controller.getDataItems(currentUser!.uid.toString());
     setState(() {
       namaAdmin = tokos[0].adminToko;
+
       print(tokos[0].adminToko);
+      print(tokos[0].urlImage);
     });
   }
 
   Future<void> _getJual() async {
-    List<LaporanPenjualan> _jual = await penjualancontroller.getData(currentUser!.uid.toString());
+    List<Barang> _jual =
+        await barangcontroller.getItems(currentUser!.uid.toString());
     setState(() {
       jual = _jual;
       print(jual.toList());
 
       for (int i = 0; i < _jual.length; i++) {
-        penjualan += _jual[i].totalJual;
+        penjualan += _jual[i].terjual;
       }
+      print(penjualan);
     });
   }
 
   Future<void> _getStok() async {
-    List<Barang> _stok = await barangcontroller.getItems(currentUser!.uid.toString());
+    List<Barang> _stok =
+        await barangcontroller.getItems(currentUser!.uid.toString());
     setState(() {
       stok = _stok;
       for (int i = 0; i < _stok.length; i++) {
@@ -95,7 +102,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Future<void> _getMember() async {
-    List<Member> _members = await membercontroller.getMembersData(currentUser!.uid.toString());
+    List<Member> _members =
+        await membercontroller.getMembersData(currentUser!.uid.toString());
     setState(() {
       members = _members;
       member = _members.length;
@@ -104,12 +112,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Future<void> _getSaldo() async {
-    List<LaporanPemasukan> _saldo = await pemasukancontroller.getData(currentUser!.uid.toString());
+    List<Toko> _saldo =
+        await controller.getDataItems(currentUser!.uid.toString());
     setState(() {
-      saldos = _saldo;
-      for (int i = 0; i < _saldo.length; i++) {
-        saldo += _saldo[i].totalHarga;
-      }
+      saldo = _saldo[0].saldo;
     });
   }
 

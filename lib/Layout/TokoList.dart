@@ -66,7 +66,8 @@ class _CrudTokoState extends State<CrudToko> {
                 adminToko: "Afif",
                 urlImage:
                     "https://tse2.mm.bing.net/th?id=OIP.4gkSTMRl_8DsEquU0WTELgHaE8&pid=Api&P=0&h=180",
-                alamat: 'ach');
+                alamat: 'ach',
+                saldo: 0);
             controller.addItem(newItem);
             print("okbng");
             _loadUsers();

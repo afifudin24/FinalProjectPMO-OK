@@ -8,7 +8,7 @@ class Donasi {
   String namadonatur;
   String email;
   String noTelp;
-  int jumlah;
+  double jumlah;
   Timestamp tanggal;
 
   Donasi(

@@ -12,7 +12,7 @@ void main() {
 }
 
 class DonationApp extends StatefulWidget {
-  final int? jumlah;
+  final double? jumlah;
   DonationApp({super.key, this.jumlah});
   @override
   _DonationAppState createState() => _DonationAppState();
@@ -155,7 +155,7 @@ class _DonationAppState extends State<DonationApp> {
                           kdDonasi: randomId,
                           email: emailoke.text,
                           idToko: currentUser!.uid.toString(),
-                          jumlah: int.parse(jumlah.text),
+                          jumlah: double.parse(jumlah.text),
                           namadonatur: namadonatur.text,
                           noTelp: notelpon.text,
                           tanggal: timestamp,

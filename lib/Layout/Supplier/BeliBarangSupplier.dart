@@ -237,7 +237,7 @@ class _BeliBarangSupplierState extends State<BeliBarangSupplier> {
           stok: element?["qty"],
           namabarang: element?["namabarang"],
           terjual: 0,
-          urlImage: 'defaultbarang.png',
+          urlImage: 'default.png',
         );
         barangController.addItem(element?["kodebarang"], data).then((value) {
           print("Berhasil menambahkan barang baru");

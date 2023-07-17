@@ -55,15 +55,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
   //saldo
   var saldos = [];
 
-  int saldo = 0;
+  double saldo = 0;
   @override
   void initState() {
     super.initState();
-    _loadUsers();
+    // _loadUsers();
     _getJual();
     _getStok();
     _getMember();
-    _getSaldo();
+    // _getSaldo();
     print(currentUser!.uid.toString());
   }
 
@@ -118,6 +118,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         await controller.getDataItems(currentUser!.uid.toString());
     setState(() {
       saldo = _saldo[0].saldo;
+      print(saldo);
     });
   }
 
@@ -327,7 +328,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     List<DocumentSnapshot> documents = snapshot.data!.docs;
 
                     // Membuat map untuk menyimpan total pemasukan berdasarkan kategori waktu (bulan)
-                    Map<String, int> incomeByMonth = {};
+                    Map<String, double> incomeByMonth = {};
 
                     // Mengelompokkan dan menghitung total pemasukan berdasarkan bulan
                     documents.forEach((doc) {
@@ -352,11 +353,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         data: incomeByMonth.entries.map((entry) {
                           return IncomeData(
                             category: entry.key,
-                            value: entry.value,
+                            value: entry.value.toDouble(),
                           );
                         }).toList(),
                         domainFn: (IncomeData data, _) => data.category,
-                        measureFn: (IncomeData data, _) => data.value,
+                        measureFn: (IncomeData data, _) =>
+                            data.value.toDouble(),
                         labelAccessorFn: (IncomeData data, _) =>
                             data.value.toString(),
                       ),
@@ -677,7 +679,7 @@ class DashboardMenuItem extends StatelessWidget {
 
 class IncomeData {
   final String category;
-  final int value;
+  final double value;
 
   IncomeData({required this.category, required this.value});
 }

@@ -36,6 +36,7 @@ class _PenyaluranDonasiState extends State<PenyaluranDonasi> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: primaryColor),
         centerTitle: true,
         title: Text(
           'Penyaluran Donasi',
@@ -158,6 +159,7 @@ class _PenyaluranDonasiState extends State<PenyaluranDonasi> {
                             );
                             _jumlahController.clear();
                             _tujuanController.clear();
+                            Navigator.pop(context);
                             // Navigator.pushReplacement(
                             //   context,
                             //   MaterialPageRoute(

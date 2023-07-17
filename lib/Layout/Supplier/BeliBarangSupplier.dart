@@ -6,16 +6,20 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kasir_euy/Class/LaporanPemasukanClass.dart';
 import 'package:kasir_euy/Layout/AddTransaksi.dart';
-import '../Class/BarangClass.dart';
-import '../Class/LaporanPenjualanClass.dart';
-import '../Class/TokoClass.dart';
-import '../ClassService.dart/BarangService.dart';
-import '../ClassService.dart/LaporanPemasukanService.dart';
-import '../ClassService.dart/LaporanPenjualanService.dart';
-import '../ClassService.dart/TokoService.dart';
-import 'Donasilayout.dart';
-import 'komposisi.dart';
-import 'AddTransaksi.dart';
+import '../../../Class/BarangClass.dart';
+
+import '../../Class/BarangSupplierClass.dart';
+import '../../Class/LaporanPengeluaran.dart';
+import '../../Class/TokoClass.dart';
+import '../../ClassService.dart/BarangService.dart';
+import '../../ClassService.dart/BarangSupplierService.dart';
+import '../../ClassService.dart/LaporanPengeluaranService.dart';
+import '../../ClassService.dart/TokoService.dart';
+import '../../main.dart';
+
+import '../HomeScreen.dart';
+import '../komposisi.dart';
+
 import 'package:need_resume/need_resume.dart';
 import 'dart:io';
 import 'package:pdf/pdf.dart';
@@ -24,20 +28,22 @@ import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
-import 'HomeScreen.dart';
-import '../main.dart';
 
-class TransaksiScreen extends StatefulWidget {
-  const TransaksiScreen({super.key});
+import 'package:flutter/material.dart';
+
+class BeliBarangSupplier extends StatefulWidget {
+  const BeliBarangSupplier({super.key});
 
   @override
-  State<TransaksiScreen> createState() => _TransaksiScreenState();
+  State<BeliBarangSupplier> createState() => _BeliBarangSupplierState();
 }
 
-class _TransaksiScreenState extends State<TransaksiScreen> {
+class _BeliBarangSupplierState extends State<BeliBarangSupplier> {
+  @override
   String namaBrg = " ";
   int hrg = 0;
   int ttlHarga = 0;
+  double hargaJual = 0.0;
   int qty = 0;
   int? stok = 0;
   int totalSeluruhHarga = 0;
@@ -75,81 +81,51 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
   final FocusNode _kdfocusNode = FocusNode();
   TokoService tokoController = TokoService();
   BarangService barangController = BarangService();
-  LaporanPemasukanService pemasukanController = LaporanPemasukanService();
-  LaporanPenjualanService penjualanController = LaporanPenjualanService();
-  List<Barang> barangData = [];
-  List<Barang> dataBarang = [];
+  BarangSupplierService barangSuppController = BarangSupplierService();
+  LaporanPengeluaranService pengeluaranController = LaporanPengeluaranService();
+  List<BarangSupplier> barangData = [];
+  List<BarangSupplier> dataBarang = [];
   int? hargaPer;
   Future<void> _getBarang() async {
-    List<Barang> barangs =
-        await barangController.getItems(currentUser!.uid.toString());
+    List<BarangSupplier> barangs =
+        await barangSuppController.getItems(currentUser!.uid.toString());
     setState(() {
       dataBarang = barangs;
     });
   }
 
   Future<void> _getData(String kd) async {
-    List<Barang> barangPilih = await barangController.getData(kd);
+    List<BarangSupplier> barangPilih = await barangSuppController.getData(kd);
     if (barangPilih.length > 0) {
       setState(() {
         barangData = barangPilih;
         print(barangData[0].namabarang);
         namaBrg = barangData[0].namabarang;
-        hrg = barangData[0].harga as int;
+        hrg = barangData[0].hargabarang;
         ttlHarga = hrg * qty;
-        stok = barangData[0].stok;
-        conStok.text = barangData[0].stok.toString();
       });
     }
   }
 
-  Future<void> _inputDataPemasukan() async {
+  Future<void> _inputDataPengeluaran() async {
     setState(() {
       int? ttlhrga = totalSeluruhHarga;
-      int jml =
-          daftarBarang.map((data) => data?['qty']!).reduce((a, b) => a + b);
       DateTime now = DateTime.now();
       Timestamp timestamp = Timestamp.fromDate(now);
       String randomId =
-          FirebaseFirestore.instance.collection('laporanPemasukan').doc().id;
-      LaporanPemasukan data = LaporanPemasukan(
-          idToko: currentUser!.uid.toString(),
-          idTransaksi: randomId,
-          jumlBarang: jml,
-          totalHarga: ttlhrga,
-          date: timestamp);
-      pemasukanController.addItem(randomId, data).then((result) {
-        // Blok then akan dijalankan jika operasi berhasil
-        print("oke");
-        setState(() {
-          cek = true;
-        });
-      }).catchError((error) {
-        // Blok catchError akan dijalankan jika terjadi kesalahan
-        print('Terjadi kesalahan: $error');
-        setState(() {
-          cek = false;
-        });
-      });
-    });
-  }
-
-  Future<void> _inputDataPenjualan() async {
-    DateTime now = DateTime.now();
-    Timestamp timestamp = Timestamp.fromDate(now);
-    String randomId =
-        FirebaseFirestore.instance.collection('laporanPenjualan').doc().id;
-    daftarBarang.forEach((element) {
-      LaporanPenjualan data = LaporanPenjualan(
-          idJual: randomId,
-          kdbarang: element?['kodebarang'],
-          namaBarang: element?['namabarang'],
-          idToko: currentUser!.uid.toString(),
-          totalJual: element?['qty'],
-          date: timestamp);
-      penjualanController.addItem(randomId, data).then((result) {
+          FirebaseFirestore.instance.collection('laporanPengeluaran').doc().id;
+      // var ttlkeluar? = totalSeluruhHarga;
+      LaporanPengeluaran data = LaporanPengeluaran(
+          idPengeluaran: randomId,
+          totalPengeluaran: ttlhrga,
+          date: timestamp,
+          idToko: currentUser!.uid.toString());
+      pengeluaranController.addItem(randomId, data).then((result) {
         // Blok then akan dijalankan jika operasi berhasil
         print("sip");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Beli Barang Berhasil')),
+        );
         setState(() {
           cek = true;
         });
@@ -173,7 +149,7 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
         await tokoController.getDataItems(currentUser!.uid.toString());
     toko = tokoPilih[0];
     saldo = tokoPilih[0].saldo;
-    saldoTerkini = saldo + totalSeluruhHarga;
+    saldoTerkini = saldo - totalSeluruhHarga;
     CollectionReference collectionRef =
         FirebaseFirestore.instance.collection('toko');
     Query query =
@@ -214,58 +190,111 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
     // });
   }
 
-  Future<void> _updateTerjual() async {
-    daftarBarang.forEach((element) {
-      var stok;
-      var terjual;
-      daftarBarang.forEach((element) async {
-        List<Barang> barangPilih =
-            await barangController.getData(element?['kodebarang']);
-        stok = barangPilih[0].stok - element?['qty'];
-        terjual = barangPilih[0].terjual + element?['qty'];
-        FirebaseFirestore.instance
-            .collection(
-                'barang') // Ganti dengan nama koleksi sesuai dengan struktur Firestore Anda
-            .doc(element?[
-                'kodebarang']) // Ganti dengan ID produk yang ingin Anda update
-            .update({'stok': stok}) // Update properti 'stock' dengan nilai baru
-            .then((value) {
-          print('Stok berhasil diupdate');
-          setState(() {
-            cek = true;
-          });
-        }).catchError((error) {
-          print('Terjadi kesalahan: $error');
-          setState(() {
-            cek = false;
-          });
-        });
+  Future<void> _updateBarang() async {
+    daftarBarang.forEach((element) async {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('barang')
+          .where('kdbarang', isEqualTo: element?['kodebarang'])
+          .get();
 
-        FirebaseFirestore.instance
-            .collection(
-                'barang') // Ganti dengan nama koleksi sesuai dengan struktur Firestore Anda
-            .doc(element?[
-                'kodebarang']) // Ganti dengan ID produk yang ingin Anda update
-            .update({
-          'terjual': terjual
-        }) // Update properti 'stock' dengan nilai baru
-            .then((value) {
-          print('Terjual berhasil diupdate');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Transaksi Berhasil')),
-          );
-          setState(() {
-            cek = true;
-          });
-        }).catchError((error) {
-          print('Terjadi kesalahan: $error');
-          setState(() {
-            cek = false;
-          });
+      if (querySnapshot.docs.isNotEmpty) {
+        print('Data ada');
+
+        querySnapshot.docs.forEach((document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+          var stokBaru = data["stok"] + element?['qty'];
+          if (data["harga"] == element?['hargaJual']) {
+            Map<String, dynamic> dataku = {
+              'stok': stokBaru,
+              // Tambahkan field dan nilai baru sesuai kebutuhan
+            };
+            document.reference
+                .update(dataku)
+                .then((value) => print("Stok Berhasil Diupdate"))
+                .catchError((onError) => print("Terjadi Kesalahan"));
+          } else {
+            var hargaBaru = (data["harga"] + element?["hargaJual"]) / 2;
+            print(element?["hargaJual"]);
+            print(data['harga']);
+            Map<String, dynamic> dataku = {
+              'stok': stokBaru,
+              'harga': hargaBaru,
+              // Tambahkan field dan nilai baru sesuai kebutuhan
+            };
+            document.reference
+                .update(dataku)
+                .then((value) => print("Stok Berhasil Diupdate"))
+                .catchError((onError) => print("Terjadi Kesalahan"));
+          }
+
+          // Menampilkan data
         });
-      });
-      ;
+      } else {
+        Barang data = Barang(
+          harga: element?["hargaJual"],
+          kdbarang: element?["kodebarang"],
+          idtoko: currentUser!.uid.toString(),
+          stok: element?["qty"],
+          namabarang: element?["namabarang"],
+          terjual: 0,
+          urlImage: 'defaultbarang.png',
+        );
+        barangController.addItem(element?["kodebarang"], data).then((value) {
+          print("Berhasil menambahkan barang baru");
+        }).catchError((onError) {
+          print("Gagal Euy");
+        });
+        print('Data tidak ada');
+      }
     });
+    // print(currentUser!.uid.toString());
+    // var toko;
+    // var saldo;
+    // var saldoTerkini;
+
+    // List<Toko> tokoPilih =
+    //     await tokoController.getDataItems(currentUser!.uid.toString());
+    // toko = tokoPilih[0];
+    // saldo = tokoPilih[0].saldo;
+    // saldoTerkini = saldo - totalSeluruhHarga;
+    // CollectionReference collectionRef =
+    //     FirebaseFirestore.instance.collection('toko');
+    // Query query =
+    //     collectionRef.where('idtoko', isEqualTo: currentUser!.uid.toString());
+    // // Data yang ingin diperbarui
+    // Map<String, dynamic> data = {
+    //   'saldo': saldoTerkini,
+    //   // Tambahkan field dan nilai baru sesuai kebutuhan
+    // };
+    // Memperbarui data di Firestore
+    // query.get().then((querySnapshot) {
+    //   querySnapshot.docs.forEach((doc) {
+    //     doc.reference
+    //         .update(data)
+    //         .then((value) => print('Saldo berhasil diperbarui'))
+    //         .catchError((error) => print('Terjadi error: $error'));
+    //   });
+    // });
+
+    // FirebaseFirestore.instance
+    //     .collection(
+    //         'toko') // Ganti dengan nama koleksi sesuai dengan struktur Firestore Anda
+    //     .doc(currentUser!.uid
+    //         .toString()) // Ganti dengan ID produk yang ingin Anda update
+    //     .update({
+    //   'saldo': saldoTerkini
+    // }) // Update properti 'stock' dengan nilai baru
+    //     .then((value) {
+    //   print('Saldo berhasil diupdate');
+    //   setState(() {
+    //     cek = true;
+    //   });
+    // }).catchError((error) {
+    //   print('Terjadi kesalahan: $error');
+    //   setState(() {
+    //     cek = false;
+    //   });
+    // });
   }
 
   //savePdf
@@ -281,7 +310,7 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
         row?['kodebarang'].toString(),
         row?['namabarang'].toString(),
         row?['hargaperbarang'].toString(),
-        row?['totalharga'].toString(),
+        row?['hargaJual'].toString(),
       ];
     }).toList();
 
@@ -310,7 +339,7 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
                     'Kode Barang',
                     'Nama Barang',
                     'Harga Barang',
-                    'Total Harga',
+                    'Harga Jual',
                     // Daftar judul kolom di sini
                   ],
                   headerCount: 1,
@@ -326,12 +355,7 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
                   },
                 ),
                 pw.SizedBox(height: 10),
-                pw.Text("Total Harga : $totalSeluruhHarga"),
-                pw.SizedBox(height: 10),
-                pw.Text("Total Bayar : $totalbayar"),
-                pw.SizedBox(height: 10),
-                pw.Text("Total Kembalian : $kembalian"),
-                pw.SizedBox(height: 10),
+                pw.Text("Total Pengeluaran : $totalSeluruhHarga"),
               ]));
         },
       ),
@@ -339,7 +363,7 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
 
     // Dapatkan path penyimpanan di perangkat
     final directory = await getExternalStorageDirectory();
-    final path = '${directory?.path}/transaksi-$formattedDate.pdf';
+    final path = '${directory?.path}/belibarang-$formattedDate.pdf';
 
     lokasi = path;
     print(lokasi);
@@ -391,12 +415,12 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
     });
   }
 
-  void ubahData(String nama, harga, kd, stok) {
+  void ubahData(String nama, harga, kd) {
     setState(() {
       namaBrg = nama;
       hrg = harga;
       conKdBarang.text = kd;
-      stok = stok;
+
       conStok.text = stok.toString();
     });
     print(stok);
@@ -441,19 +465,21 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
     print(namaBrg);
   }
 
-  void _tambahKeDaftar(
-      String kd, String nmbrg, int hrgpr, int totalHarga, int qty) {
+  void _tambahKeDaftar(String kd, String nmbrg, int hrgpr, int totalHarga,
+      int qty, double hargaJual) {
     setState(() {
       Map<String, dynamic> data = {
         "kodebarang": kd,
         "namabarang": nmbrg,
         "hargaperbarang": hrgpr,
         "totalharga": totalHarga,
-        "qty": qty
+        "qty": qty,
+        "hargaJual": hargaJual,
       };
       daftarBarang.add(data);
 
       print(daftarBarang.toString());
+      Navigator.pop(context);
     });
   }
 
@@ -531,16 +557,16 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
                 child: ListView.builder(
                   itemCount: dataBarang.length,
                   itemBuilder: (BuildContext context, int index) {
-                    Barang dtBrg = dataBarang[index];
+                    BarangSupplier dtBrg = dataBarang[index];
                     return ListTile(
-                      title: Text(dtBrg.kdbarang.toString()),
+                      title: Text(dtBrg.kodebarang.toString()),
                       subtitle: Text(dtBrg.namabarang),
                       hoverColor: Colors.grey,
                       trailing: FilledButton.icon(
                         onPressed: () {
                           setState(() {
-                            ubahData(dtBrg.namabarang, dtBrg.harga,
-                                dtBrg.kdbarang, dtBrg.stok);
+                            ubahData(dtBrg.namabarang, dtBrg.hargabarang,
+                                dtBrg.kodebarang);
                           });
                           print(hrg);
                           Navigator.pop(context);
@@ -571,79 +597,124 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
   }
 
   Widget build(BuildContext context) {
-    return Container(
-        color: Color.fromARGB(225, 255, 255, 255),
-        height: MediaQuery.of(context).size.height,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 70,
-                padding: EdgeInsets.all(10),
-                child: ElevatedButton.icon(
-                    style: ButtonStyle(
-                        padding: MaterialStatePropertyAll(EdgeInsets.all(10)),
-                        backgroundColor:
-                            MaterialStatePropertyAll(primaryColor)),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => oke(context)));
-                    },
-                    icon: Icon(Icons.add_shopping_cart_rounded),
-                    label: Text("Tambah Barang")),
-              ),
-              Container(
-                child: () {
-                  if (daftarBarang.isEmpty) {
-                    return Container(
-                      height: MediaQuery.of(context).size.height * 0.7,
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset("assets/image/kosongBelanja.png"),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Belum Ada Daftar Barang",
-                              style: GoogleFonts.poppins(
-                                  fontSize: 25, color: Colors.black),
-                            ),
-                          ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Beli Barang"),
+        centerTitle: true,
+        backgroundColor: primaryColor,
+      ),
+      body: Container(
+          color: Color.fromARGB(225, 255, 255, 255),
+          height: MediaQuery.of(context).size.height,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 70,
+                  padding: EdgeInsets.all(10),
+                  child: ElevatedButton.icon(
+                      style: ButtonStyle(
+                          padding: MaterialStatePropertyAll(EdgeInsets.all(10)),
+                          backgroundColor:
+                              MaterialStatePropertyAll(primaryColor)),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => oke(context)));
+                      },
+                      icon: Icon(Icons.add_shopping_cart_rounded),
+                      label: Text("Tambah Barang")),
+                ),
+                Container(
+                  child: () {
+                    if (daftarBarang.isEmpty) {
+                      return Container(
+                        height: MediaQuery.of(context).size.height * 0.7,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset("assets/image/kosongBelanja.png"),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Belum Ada Daftar Barang",
+                                style: GoogleFonts.poppins(
+                                    fontSize: 25, color: Colors.black),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  } else {
-                    setState(() {
-                      tampilProses = true;
-                    });
-                    return Container(
-                      padding: EdgeInsets.only(
-                        bottom: 15,
-                      ),
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom:
-                                  BorderSide(width: 3, color: Colors.grey))),
-                      child: Column(
-                        children: [
-                          SingleChildScrollView(
-                            child: FittedBox(
-                              child: Expanded(
-                                child: DataTable(
-                                    showBottomBorder: true,
+                      );
+                    } else {
+                      setState(() {
+                        tampilProses = true;
+                      });
+                      return Container(
+                        padding: EdgeInsets.only(
+                          bottom: 15,
+                        ),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom:
+                                    BorderSide(width: 3, color: Colors.grey))),
+                        child: Column(
+                          children: [
+                            SingleChildScrollView(
+                              child: FittedBox(
+                                child: Expanded(
+                                  child: DataTable(
+                                      showBottomBorder: true,
+                                      columnSpacing: 20,
+                                      columns: const [
+                                        DataColumn(
+                                            label: Center(child: Text("QTY")),
+                                            numeric: true),
+                                        DataColumn(
+                                            label: Center(
+                                                child: Text("Kode Barang"))),
+                                        DataColumn(
+                                            label: Center(
+                                                child: Text("Nama Barang"))),
+                                        DataColumn(
+                                            label: Center(
+                                                child: Text("Harga Barang"))),
+                                        // DataColumn(
+                                        //     label: Center(
+                                        //         child: Text("Total Harga"))),
+                                        DataColumn(
+                                            label: Center(
+                                                child: Text("Harga Jual"))),
+                                      ],
+                                      rows: []),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              height: MediaQuery.of(context).size.height * 0.55,
+                              width: MediaQuery.of(context).size.width,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.vertical,
+                                child: Flexible(
+                                  child: DataTable(
+                                    showBottomBorder: false,
                                     columnSpacing: 20,
+                                    headingRowHeight: 0,
                                     columns: const [
                                       DataColumn(
-                                          label: Center(child: Text("QTY")),
-                                          numeric: true),
+                                        label: Center(
+                                          child: Text(
+                                            "QTY",
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
                                       DataColumn(
                                           label: Center(
                                               child: Text("Kode Barang"))),
@@ -653,149 +724,182 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
                                       DataColumn(
                                           label: Center(
                                               child: Text("Harga Barang"))),
+                                      // DataColumn(
+                                      //     label: Center(
+                                      //         child: Text("Total Harga"))),
                                       DataColumn(
                                           label: Center(
-                                              child: Text("Total Harga"))),
+                                              child: Text("Harga Jual"))),
                                     ],
-                                    rows: []),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.55,
-                            width: MediaQuery.of(context).size.width,
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.vertical,
-                              child: Flexible(
-                                child: DataTable(
-                                  showBottomBorder: false,
-                                  columnSpacing: 20,
-                                  headingRowHeight: 0,
-                                  columns: const [
-                                    DataColumn(
-                                      label: Center(
-                                        child: Text(
-                                          "QTY",
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                    ),
-                                    DataColumn(
-                                        label:
-                                            Center(child: Text("Kode Barang"))),
-                                    DataColumn(
-                                        label:
-                                            Center(child: Text("Nama Barang"))),
-                                    DataColumn(
-                                        label: Center(
-                                            child: Text("Harga Barang"))),
-                                    DataColumn(
-                                        label:
-                                            Center(child: Text("Total Harga"))),
-                                  ],
-                                  rows: List<DataRow>.generate(
-                                    daftarBarang.length,
-                                    (index) => DataRow(
-                                      cells: [
-                                        DataCell(Center(
-                                          child: Text(
-                                            daftarBarang[index]!['qty']
-                                                .toString(),
-                                          ),
-                                        )),
-                                        DataCell(
-                                          Center(
-                                            child: TextButton.icon(
-                                              icon: Icon(Icons.edit),
-                                              onPressed: () {
-                                                setState(() {
-                                                  qtyPilihController.text =
+                                    rows: List<DataRow>.generate(
+                                      daftarBarang.length,
+                                      (index) => DataRow(
+                                        cells: [
+                                          DataCell(Center(
+                                            child: Text(
+                                              daftarBarang[index]!['qty']
+                                                  .toString(),
+                                            ),
+                                          )),
+                                          DataCell(
+                                            Center(
+                                              child: TextButton.icon(
+                                                icon: Icon(Icons.edit),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    qtyPilihController.text =
+                                                        daftarBarang[index]![
+                                                                'qty']
+                                                            .toString();
+                                                  });
+                                                  showDataTable(
+                                                      context,
+                                                      daftarBarang[index]
+                                                          ?['kodebarang'],
                                                       daftarBarang[index]![
-                                                              'qty']
-                                                          .toString();
-                                                });
-                                                showDataTable(
-                                                    context,
-                                                    daftarBarang[index]
-                                                        ?['kodebarang'],
-                                                    daftarBarang[index]!['qty'],
-                                                    daftarBarang[index]
-                                                        ?['namabarang']);
-                                              },
-                                              label: Text(
-                                                daftarBarang[index]
-                                                    ?['kodebarang'],
-                                                textAlign: TextAlign.center,
+                                                          'qty'],
+                                                      daftarBarang[index]
+                                                          ?['namabarang']);
+                                                },
+                                                label: Text(
+                                                  daftarBarang[index]
+                                                      ?['kodebarang'],
+                                                  textAlign: TextAlign.center,
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        DataCell(Center(
-                                          child: Text(daftarBarang[index]
-                                              ?['namabarang']),
-                                        )),
-                                        DataCell(Center(
-                                          child: Text(daftarBarang[index]![
-                                                  'hargaperbarang']
-                                              .toString()),
-                                        )),
-                                        DataCell(Center(
-                                          child: Text(
-                                              daftarBarang[index]!['totalharga']
-                                                  .toString()),
-                                        )),
-                                      ],
+                                          DataCell(Center(
+                                            child: Text(daftarBarang[index]
+                                                ?['namabarang']),
+                                          )),
+                                          DataCell(Center(
+                                            child: Text(daftarBarang[index]![
+                                                    'hargaperbarang']
+                                                .toString()),
+                                          )),
+                                          // DataCell(Center(
+                                          //   child: Text(daftarBarang[index]![
+                                          //           'totalharga']
+                                          //       .toString()),
+                                          // )),
+                                          DataCell(Center(
+                                            child: Text(daftarBarang[index]![
+                                                    'hargaJual']
+                                                .toString()),
+                                          )),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                }(),
-              ),
-              Visibility(
-                visible: tampilProses,
-                child: Container(
-                  height: MediaQuery.of(context).size.height * 0.1,
-                  margin: EdgeInsets.only(right: 10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton.icon(
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStatePropertyAll(secondaryColor),
-                            padding: MaterialStatePropertyAll(
-                              EdgeInsets.all(10),
-                            ),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              totalSeluruhHarga = daftarBarang
-                                  .map((data) => data?['totalharga']!)
-                                  .reduce((a, b) => a + b);
-                              print(totalSeluruhHarga);
-                            });
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ProsesTransaksi(
-                                        context, totalSeluruhHarga)));
-                          },
-                          icon: Icon(Icons.navigate_next),
-                          label: Text("Proses"))
-                    ],
-                  ),
+                          ],
+                        ),
+                      );
+                    }
+                  }(),
                 ),
-              )
-            ],
-          ),
-        ));
+                Visibility(
+                  visible: tampilProses,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.1,
+                    margin: EdgeInsets.only(right: 10),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ElevatedButton.icon(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStatePropertyAll(secondaryColor),
+                              padding: MaterialStatePropertyAll(
+                                EdgeInsets.all(10),
+                              ),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                totalSeluruhHarga = daftarBarang
+                                    .map((data) => data?['totalharga']!)
+                                    .reduce((a, b) => a + b);
+                                print(totalSeluruhHarga);
+                              });
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Center(
+                                        child: Text("Detail Transaksi",
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 26,
+                                            )),
+                                      ),
+                                      content: Container(
+                                        height: 100,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                                "Total Bayar : $totalSeluruhHarga",
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 24,
+                                                )),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: [
+                                        ElevatedButton.icon(
+                                            style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStatePropertyAll(
+                                                        primaryColor)),
+                                            onPressed: () {},
+                                            icon: Icon(Icons.file_download),
+                                            label: Text("Simpan PDF")),
+                                        ElevatedButton.icon(
+                                            style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStatePropertyAll(
+                                                        Colors.green)),
+                                            onPressed: () {
+                                              _updateSaldo();
+                                              _updateBarang();
+                                              _inputDataPengeluaran();
+                                              setState(() {
+                                                Navigator.pop(context);
+                                                daftarBarang.clear();
+                                                tampilProses = false;
+                                              });
+                                            },
+                                            icon:
+                                                Icon(Icons.check_circle_sharp),
+                                            label: Text("Selesaikan Transaksi"))
+                                      ],
+                                    );
+                                  });
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => ProsesTransaksi(
+                              //             context, totalSeluruhHarga)));
+                            },
+                            icon: Icon(Icons.navigate_next),
+                            label: Text("Proses"))
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )),
+    );
   }
 
   Widget oke(BuildContext context) {
@@ -881,7 +985,10 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
                             } else {
                               setState(() {
                                 ttlHarga = int.parse(value) * hrg;
+                                var marginUntung = 0.2 * ttlHarga;
+                                var jualSeluruh = marginUntung + ttlHarga;
                                 qty = int.parse(value);
+                                hargaJual = jualSeluruh.toDouble() / qty;
                               });
                             }
                           },
@@ -928,7 +1035,10 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
                       Text("Harga Per Barang : $hrg",
                           style: GoogleFonts.poppins(
                               fontSize: 15, color: Colors.black)),
-                      Text("Total Harga : $ttlHarga",
+                      Text("Total Harga Beli : $ttlHarga",
+                          style: GoogleFonts.poppins(
+                              fontSize: 15, color: Colors.black)),
+                      Text("Harga Jual : $hargaJual",
                           style: GoogleFonts.poppins(
                               fontSize: 15, color: Colors.black)),
                     ],
@@ -943,38 +1053,9 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
                         onPressed: () {
                           print(stok);
                           print(conStok.text);
-                          if (int.parse(conStok.text) > qty) {
-                            setState(() {
-                              _tambahKeDaftar(conKdBarang.text, namaBrg, hrg,
-                                  ttlHarga, qty);
-                            });
-                            Navigator.pop(context, TransaksiScreen());
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text("Kesalahan"),
-                                  content: Text(
-                                      "Stok Tidak Cukup \nStok Terkini $stok"),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          conQTY.clear();
-                                          print(qty);
-                                        });
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text("Tutup"),
-                                    )
-                                  ],
-                                );
-                              },
-                            );
-                            conQTY.clear();
-                            _qtyfocusNode.requestFocus();
-                          }
+
+                          _tambahKeDaftar(conKdBarang.text, namaBrg, hrg,
+                              ttlHarga, qty, hargaJual);
                         },
                         icon: Icon(Icons.add_circle_outlined),
                         label: Text("Tambahkan")),
@@ -1168,7 +1249,7 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
                                         fontSize: 26,
                                       )),
                                   content: Container(
-                                    height: 150,
+                                    height: 250,
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -1194,127 +1275,14 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
                                     ),
                                   ),
                                   actions: [
-                                    Visibility(
-                                      visible: tampilSimpanPDF,
-                                      child: ElevatedButton.icon(
-                                          style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStatePropertyAll(
-                                                      Colors.green)),
-                                          onPressed: () {
-                                            savePdf();
-                                          },
-                                          icon: Icon(
-                                              Icons.file_download_outlined),
-                                          label: Text("Simpan PDF")),
-                                    ),
-                                    Visibility(
-                                      visible: tampilBukaPDF,
-                                      child: ElevatedButton.icon(
-                                          style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStatePropertyAll(
-                                                      Colors.green)),
-                                          onPressed: () {
-                                            openPDF(lokasi);
-                                          },
-                                          icon: Icon(Icons.file_open_rounded),
-                                          label: Text("Buka PDF")),
-                                    ),
                                     ElevatedButton.icon(
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStatePropertyAll(
-                                                    primaryColor)),
-                                        onPressed: () {
-                                          _inputDataPemasukan();
-                                          _inputDataPenjualan();
-                                          _updateSaldo();
-                                          _updateTerjual();
-                                          if (cek == true) {
-                                            setState(() {
-                                              daftarBarang.clear();
-                                              tampilProses = false;
-
-                                              showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return AlertDialog(
-                                                    content: Container(
-                                                      height: 100,
-                                                      child: Column(children: [
-                                                        Text(
-                                                            "Donasikan Kembalian?"),
-                                                      ]),
-                                                    ),
-                                                    actions: [
-                                                      ElevatedButton.icon(
-                                                          label:
-                                                              Text("Donasikan"),
-                                                          onPressed: () {
-                                                            Navigator
-                                                                .pushAndRemoveUntil(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder: (context) =>
-                                                                      DonationApp(
-                                                                          jumlah:
-                                                                              kembalian)),
-                                                              (Route<dynamic>
-                                                                      route) =>
-                                                                  false,
-                                                            );
-                                                          },
-                                                          icon: Icon(Icons
-                                                              .check_rounded)),
-                                                      ElevatedButton.icon(
-                                                          label: Text(
-                                                              "Tidak Donasi"),
-                                                          onPressed: () {
-                                                            setState(() {
-                                                              Navigator
-                                                                  .pushAndRemoveUntil(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            HomePage(
-                                                                              laman: 1,
-                                                                            )),
-                                                                (Route<dynamic>
-                                                                        route) =>
-                                                                    false,
-                                                              );
-                                                              showDialog(
-                                                                context:
-                                                                    context,
-                                                                builder:
-                                                                    (BuildContext
-                                                                        context) {
-                                                                  return AlertDialog(
-                                                                    title: Text(
-                                                                        'Transaksi'),
-                                                                    content: Text(
-                                                                        "Berhasil"),
-                                                                  );
-                                                                },
-                                                              );
-                                                            });
-                                                          },
-                                                          icon: Icon(
-                                                              Icons.cancel)),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                            });
-                                          } else {
-                                            print("Gagal");
-                                          }
-                                        },
-                                        icon: Icon(Icons.done_outline_rounded),
-                                        label: Text("Selesaikan Transaksi")),
+                                        onPressed: () {},
+                                        icon: Icon(Icons.file_download),
+                                        label: Text("Simpan PDF")),
+                                    ElevatedButton.icon(
+                                        onPressed: () {},
+                                        icon: Icon(Icons.check_circle_sharp),
+                                        label: Text("Selesaikan Transaksi"))
                                   ],
                                 );
                               },

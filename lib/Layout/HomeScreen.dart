@@ -19,6 +19,10 @@ List title = ["Selamat Datang, ", "Transaksi", "Menu", "Profil"];
 var namatoko = "";
 var urlImage = " ";
 
+String alamat = "";
+String mottotoko = "";
+String emailtoko = "";
+
 // ignore: must_be_immutable
 class HomePage extends StatefulWidget {
   final int laman;
@@ -104,6 +108,9 @@ class _HomePageState extends State<HomePage> {
       title[0] = "Selamat datang, $admin";
       namatoko = toko[0].namatoko;
       urlImage = toko[0].urlImage;
+      alamat = toko[0].alamat;
+      mottotoko = toko[0].mottotoko;
+      emailtoko = toko[0].email;
       print(toko[0].adminToko);
       print(namatoko);
     });
@@ -332,28 +339,16 @@ class _HomePageState extends State<HomePage> {
             visible: visRumah,
             child: Scaffold(
               appBar: AppBar(
+                backgroundColor: Colors.white,
                 clipBehavior: Clip.antiAlias,
                 toolbarHeight: 60,
                 bottomOpacity: 1.0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(20),
-                  ),
-                ),
                 title: Text(
                   title[_selectedNavbar],
                   style: GoogleFonts.poppins(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                       color: primaryColor),
-                ),
-                flexibleSpace: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(20.0),
-                        bottomRight: Radius.circular(20.0),
-                      ),
-                      color: Colors.white),
                 ),
                 centerTitle: true,
                 actions: [
@@ -381,7 +376,7 @@ class _HomePageState extends State<HomePage> {
                     child: IconButton(
                       icon: Icon(
                         Icons.edit,
-                        color: Colors.white,
+                        color: primaryColor,
                       ),
                       onPressed: () {
                         // Tombol Edit ditekan
@@ -393,7 +388,7 @@ class _HomePageState extends State<HomePage> {
                     child: IconButton(
                       icon: Icon(
                         Icons.logout,
-                        color: Colors.white,
+                        color: primaryColor,
                       ),
                       onPressed: () {
                         // Tombol Log Out ditekan

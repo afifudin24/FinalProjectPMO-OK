@@ -5,6 +5,7 @@ import 'package:kasir_euy/Layout/BarangList.dart';
 import 'package:kasir_euy/Layout/DonasiData.dart';
 import 'package:kasir_euy/Layout/Memberlayout.dart';
 import 'package:kasir_euy/Layout/PenyaluranDonasi.dart';
+import 'package:kasir_euy/Layout/Supplier/SupplierMenu.dart';
 import 'komposisi.dart';
 
 class KasirMenuPage extends StatelessWidget {
@@ -38,6 +39,13 @@ class KasirMenuPage extends StatelessWidget {
       );
     }
 
+    void pindahSupplier() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SupplierMenu()),
+      );
+    }
+
     return Center(
       child: Container(
         alignment: Alignment.center,
@@ -57,7 +65,7 @@ class KasirMenuPage extends StatelessWidget {
                 _buildMenuItem(Icons.send_to_mobile, 'Penyaluran Donasi',
                     pindahSalurkanDonasi),
                 _buildMenuItem(
-                    Icons.view_comfy_alt_outlined, 'Supplier', '/home'),
+                    Icons.view_comfy_alt_outlined, 'Supplier', pindahSupplier),
               ],
             ),
           ),

@@ -15,12 +15,30 @@ class Profil extends StatefulWidget {
 
 class _ProfilState extends State<Profil> {
   TokoService controller = TokoService();
-
-  // late String urlImage;
+  // String namatoko = "";
+  // String alamat = "";
+  // String mottotoko = "";
+  // String emailtoko = "";
+  // String urlImage = "";
   void initState() {
     super.initState();
+    _loadUsers();
+  }
 
-    print("OK");
+  Future<void> _loadUsers() async {
+    print("lah");
+    List<Toko> tokos =
+        await controller.getDataItems(currentUser!.uid.toString());
+    setState(() {
+      namatoko = tokos[0].namatoko;
+      alamat = tokos[0].alamat;
+      mottotoko = tokos[0].mottotoko;
+      emailtoko = tokos[0].email;
+      urlImage = tokos[0].urlImage;
+      print(tokos[0].urlImage);
+
+      print(tokos[0].adminToko);
+    });
   }
 
   @override
@@ -51,8 +69,8 @@ class _ProfilState extends State<Profil> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          height: 100,
-                          width: 100,
+                          height: 150,
+                          width: 150,
                           child: CircleAvatar(
                             radius:
                                 50, // Atur ukuran radius sesuai kebutuhan Anda
@@ -64,17 +82,20 @@ class _ProfilState extends State<Profil> {
                         Text(
                           namatoko,
                           style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 32,
                               fontWeight: FontWeight.bold,
                               color: Colors.white),
                         ),
+
+                        //
+
                         SizedBox(height: 16),
                         Container(
                           decoration: BoxDecoration(
                               color: Colors.white,
                               border: Border.all(
                                 color: Colors.white,
-                                width: 1.0,
+                                width: 10,
                               ),
                               borderRadius: BorderRadius.circular(10.0)),
                           child: Padding(
@@ -85,7 +106,7 @@ class _ProfilState extends State<Profil> {
                                 Text(
                                   'Alamat : ',
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 19,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black),
                                 ),
@@ -93,20 +114,20 @@ class _ProfilState extends State<Profil> {
                                   child: Text(
                                     alamat,
                                     style: TextStyle(
-                                        fontSize: 16, color: Colors.black),
+                                        fontSize: 19, color: Colors.black),
                                   ),
                                 ),
                               ],
                             ),
                           ),
                         ),
-                        SizedBox(height: 16),
+                        SizedBox(height: 19),
                         Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
                             border: Border.all(
                               color: Colors.white,
-                              width: 1.0,
+                              width: 10,
                             ),
                             borderRadius: BorderRadius.circular(10.0),
                           ),
@@ -118,7 +139,7 @@ class _ProfilState extends State<Profil> {
                                 Text(
                                   'Motto    : ',
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 19,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black),
                                 ),
@@ -126,7 +147,7 @@ class _ProfilState extends State<Profil> {
                                   child: Text(
                                     mottotoko,
                                     style: TextStyle(
-                                        fontSize: 16, color: Colors.black),
+                                        fontSize: 19, color: Colors.black),
                                   ),
                                 ),
                               ],
@@ -139,7 +160,7 @@ class _ProfilState extends State<Profil> {
                             color: Colors.white,
                             border: Border.all(
                               color: Colors.white,
-                              width: 1.0,
+                              width: 10,
                             ),
                             borderRadius: BorderRadius.circular(10.0),
                           ),
@@ -151,7 +172,7 @@ class _ProfilState extends State<Profil> {
                                 Text(
                                   'Email   : ',
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 19,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black),
                                 ),
@@ -159,7 +180,7 @@ class _ProfilState extends State<Profil> {
                                   child: Text(
                                     emailtoko,
                                     style: TextStyle(
-                                        fontSize: 16, color: Colors.black),
+                                        fontSize: 19, color: Colors.black),
                                   ),
                                 ),
                               ],

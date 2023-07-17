@@ -1,6 +1,7 @@
 import '../ClassService.dart/MemberService.dart';
 
 class Member {
+  String idtoko;
   String idMember;
   String email;
   String nama;
@@ -8,6 +9,7 @@ class Member {
   String telepon;
 
   Member({
+    required this.idtoko,
     required this.idMember,
     required this.email,
     required this.nama,
@@ -17,6 +19,7 @@ class Member {
 
   Map<String, dynamic> toMap() {
     return {
+      'idtoko': idtoko,
       'idMember': idMember,
       'email': email,
       'nama': nama,
@@ -27,6 +30,7 @@ class Member {
 
   factory Member.fromMap(Map<String, dynamic> map) {
     return Member(
+      idtoko: map['idtoko'],
       idMember: map['idMember'],
       email: map['email'],
       nama: map['nama'],

@@ -17,10 +17,12 @@ class TokoService {
     });
     return tokoList;
   }
+
   Future<List<Toko>> getDataItems(String id) async {
     List<Toko> tokoList = [];
 
-    QuerySnapshot snapshot = await tokoCollection.where("idtoko", isEqualTo: id).get();
+    QuerySnapshot snapshot =
+        await tokoCollection.where("idtoko", isEqualTo: id).get();
 
     snapshot.docs.forEach((doc) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
@@ -40,8 +42,8 @@ class TokoService {
     return tokoCollection.doc(randomId).set(item.toMap());
   }
 
-  Future<void> updateItem(Toko item) {
-    return tokoCollection.doc(item.idtoko).update(item.toMap());
+  Future<void> updateItem(String id, Toko item) {
+    return tokoCollection.doc(id).update(item.toMap());
   }
 
   Future<void> deleteItem(String id) {

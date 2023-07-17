@@ -6,7 +6,7 @@ class LaporanPemasukan {
   String idToko;
   String idTransaksi;
   int jumlBarang;
-  int totalHarga;
+  double totalHarga;
   Timestamp date;
 
   LaporanPemasukan(

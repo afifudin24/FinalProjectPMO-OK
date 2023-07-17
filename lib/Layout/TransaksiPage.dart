@@ -36,14 +36,14 @@ class TransaksiScreen extends StatefulWidget {
 
 class _TransaksiScreenState extends State<TransaksiScreen> {
   String namaBrg = " ";
-  int hrg = 0;
-  int ttlHarga = 0;
+  double hrg = 0;
+  double ttlHarga = 0;
   int qty = 0;
   int? stok = 0;
-  int totalSeluruhHarga = 0;
+  double totalSeluruhHarga = 0;
   bool tampilProses = false;
-  int totalbayar = 0;
-  int kembalian = 0;
+  double totalbayar = 0;
+  double kembalian = 0;
   String pdfFile = " ";
   var lokasi;
   @override
@@ -95,7 +95,7 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
         barangData = barangPilih;
         print(barangData[0].namabarang);
         namaBrg = barangData[0].namabarang;
-        hrg = barangData[0].harga as int;
+        hrg = barangData[0].harga;
         ttlHarga = hrg * qty;
         stok = barangData[0].stok;
         conStok.text = barangData[0].stok.toString();
@@ -105,7 +105,7 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
 
   Future<void> _inputDataPemasukan() async {
     setState(() {
-      int? ttlhrga = totalSeluruhHarga;
+      double? ttlhrga = totalSeluruhHarga;
       int jml =
           daftarBarang.map((data) => data?['qty']!).reduce((a, b) => a + b);
       DateTime now = DateTime.now();
@@ -391,7 +391,7 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
     });
   }
 
-  void ubahData(String nama, harga, kd, stok) {
+  void ubahData(String nama, double harga, kd, stok) {
     setState(() {
       namaBrg = nama;
       hrg = harga;
@@ -442,7 +442,7 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
   }
 
   void _tambahKeDaftar(
-      String kd, String nmbrg, int hrgpr, int totalHarga, int qty) {
+      String kd, String nmbrg, double hrgpr, double totalHarga, int qty) {
     setState(() {
       Map<String, dynamic> data = {
         "kodebarang": kd,
@@ -785,7 +785,8 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ProsesTransaksi(
-                                        context, totalSeluruhHarga)));
+                                        context,
+                                        totalSeluruhHarga as double?)));
                           },
                           icon: Icon(Icons.navigate_next),
                           label: Text("Proses"))
@@ -1024,7 +1025,7 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
     );
   }
 
-  Widget ProsesTransaksi(BuildContext context, int? totalSeluruhHarga) {
+  Widget ProsesTransaksi(BuildContext context, double? totalSeluruhHarga) {
     print(daftarBarang.toString());
     return Scaffold(
       appBar: AppBar(
@@ -1155,9 +1156,9 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
                                   MaterialStatePropertyAll(Colors.green)),
                           onPressed: () {
                             setState(() {
-                              totalbayar = int.parse(_nominal.text);
-                              kembalian =
-                                  int.parse(_nominal.text) - totalSeluruhHarga!;
+                              totalbayar = double.parse(_nominal.text);
+                              kembalian = double.parse(_nominal.text) -
+                                  totalSeluruhHarga!;
                             });
                             showDialog(
                               context: context,

@@ -8,8 +8,10 @@ import '../Class/TokoClass.dart';
 import '../ClassService.dart/TokoService.dart';
 import 'DashboardPage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'LoginPage.dart';
 import 'TransaksiPage.dart';
 import '../main.dart';
+import 'editprofil.dart';
 import 'komposisi.dart';
 
 var warna = Color.fromRGBO(33, 64, 100, 1);
@@ -61,8 +63,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _selectedNavbar = widget.laman;
-    initData();
-    _getUser();
+    fetchUsers();
+    // _getUser();
   }
 
   var nama = "";
@@ -79,13 +81,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void dispose() {
-    conNama.dispose();
-    conEmail.dispose();
-    conMotto.dispose();
-    conNamaToko.dispose();
-    super.dispose();
-  }
+  // void dispose() {
+  //   conNama.dispose();
+  //   conEmail.dispose();
+  //   conMotto.dispose();
+  //   conNamaToko.dispose();
+  //   super.dispose();
+  // }
 
   //   Future<void> _simpan() async {
   //   List<Toko> tokoIni = await tokoController.getDataItems(currentUser!.uid.toString());
@@ -130,6 +132,7 @@ class _HomePageState extends State<HomePage> {
           visRumah = true;
           visLengkap = false;
         });
+        _getUser();
 
         print('Data ada');
       } else {
@@ -144,11 +147,6 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       print('Error: $e');
     }
-  }
-
-  Future<void> initData() async {
-    await fetchUsers();
-    print('Proses inisialisasi selesai');
   }
 
   Widget build(BuildContext context) {
@@ -379,6 +377,10 @@ class _HomePageState extends State<HomePage> {
                         color: primaryColor,
                       ),
                       onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => EditProfil()),
+                        );
                         // Tombol Edit ditekan
                       },
                     ),
@@ -391,6 +393,10 @@ class _HomePageState extends State<HomePage> {
                         color: primaryColor,
                       ),
                       onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginPage()),
+                        );
                         // Tombol Log Out ditekan
                       },
                     ),

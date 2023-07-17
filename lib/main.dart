@@ -73,50 +73,50 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      // home: HomePage(),
-      home: AnimatedSplashScreen(
-        splashIconSize: MediaQuery.of(context).size.height,
-        splash: Scaffold(
-          resizeToAvoidBottomInset: false,
-          extendBody: true,
-          backgroundColor: Colors.transparent,
-          body: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/image/logo.png",
-                    height: 200,
-                    width: 200,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    "KASIR-EUY",
-                    style: GoogleFonts.montserrat(
-                        fontSize: 24, color: Colors.white),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  CircularProgressIndicator(
-                    color: Colors.grey,
-                  ),
-                ],
+        debugShowCheckedModeBanner: false,
+        // home: HomePage(),
+        home: AnimatedSplashScreen(
+          splashIconSize: MediaQuery.of(context).size.height,
+          splash: Scaffold(
+            resizeToAvoidBottomInset: false,
+            extendBody: true,
+            backgroundColor: Colors.transparent,
+            body: Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Image.asset(
+                      "assets/image/logo.png",
+                      height: 200,
+                      width: 200,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      "KASIR-EUY",
+                      style: GoogleFonts.montserrat(
+                          fontSize: 24, color: Colors.white),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    CircularProgressIndicator(
+                      color: Colors.grey,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        // Ganti dengan path gambar splash screen Anda
-        nextScreen: Tentukan(
-          isLoggedIn: isLoggedIn,
-        ), // Ganti dengan widget berikutnya setelah splash screen selesai
-        splashTransition: SplashTransition.fadeTransition,
-        backgroundColor: Color.fromRGBO(33, 64, 100, 1),
-        duration: 3000, // Durasi tampilan splash screen dalam milidetik,
-      ));
+          // Ganti dengan path gambar splash screen Anda
+          nextScreen: Tentukan(
+            isLoggedIn: isLoggedIn,
+          ), // Ganti dengan widget berikutnya setelah splash screen selesai
+          splashTransition: SplashTransition.fadeTransition,
+          backgroundColor: Color.fromRGBO(33, 64, 100, 1),
+          duration: 3000, // Durasi tampilan splash screen dalam milidetik,
+        ));
     // );
   }
 }

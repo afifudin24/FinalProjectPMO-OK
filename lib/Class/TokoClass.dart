@@ -8,7 +8,7 @@ class Toko {
   String adminToko;
   String urlImage;
   String alamat;
-  int saldo;
+  double saldo;
 
   Toko(
       {required this.idtoko,
@@ -28,7 +28,7 @@ class Toko {
       'adminToko': adminToko,
       'urlImage': urlImage,
       'alamat': alamat,
-      'saldo': saldo,
+      'saldo': saldo.toDouble(),
     };
   }
 
@@ -41,7 +41,7 @@ class Toko {
       adminToko: map['adminToko'],
       urlImage: map['urlImage'],
       alamat: map['alamat'],
-      saldo: map['saldo'],
+      saldo: (map['saldo'] as int).toDouble(),
     );
   }
 }

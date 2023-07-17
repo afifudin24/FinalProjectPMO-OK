@@ -15,32 +15,12 @@ class Profil extends StatefulWidget {
 
 class _ProfilState extends State<Profil> {
   TokoService controller = TokoService();
-  String namatoko = "";
-  String alamat = "";
-  String mottotoko = "";
-  String emailtoko = "";
+
   // late String urlImage;
   void initState() {
     super.initState();
-    _loadUsers();
 
     print("OK");
-  }
-
-  Future<void> _loadUsers() async {
-    print("lah");
-    List<Toko> tokos =
-        await controller.getDataItems(currentUser!.uid.toString());
-    setState(() {
-      namatoko = tokos[0].namatoko;
-      alamat = tokos[0].alamat;
-      mottotoko = tokos[0].mottotoko;
-      emailtoko = tokos[0].email;
-      // urlImage = tokos[0].urlImage;
-      print(tokos[0].urlImage);
-
-      print(tokos[0].adminToko);
-    });
   }
 
   @override

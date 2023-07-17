@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:kasir_euy/Class/BarangClass.dart';
+import 'package:kasir_euy/Layout/komposisi.dart';
 import 'package:kasir_euy/main.dart';
 
 import '../ClassService.dart/BarangService.dart';
@@ -55,6 +58,19 @@ class _KocakState extends State<Kocak> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text(_barangdata[0].namabarang),
+              content: Container(
+                height: 200,
+                child: Center(child: () {
+                  if (_barangdata[0].urlImage == 'default.png') {
+                    print('okkk');
+                    return Image.asset("assets/image/default.png");
+                    // Text("ok");
+                  } else {
+                    print('oool');
+                    return Image.file(File(_barangdata[0].urlImage));
+                  }
+                }()),
+              ),
             );
           });
     });
@@ -91,94 +107,95 @@ class _KocakState extends State<Kocak> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.white),
+          centerTitle: true,
+          backgroundColor: primaryColor,
           title: Text("Data Barang"),
         ),
-        floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add),
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("Tambah Barang"),
-                      content: Container(
-                        child: Column(
-                          children: [
-                            TextField(
-                              decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(10),
-                                  border: UnderlineInputBorder(),
-                                  label: Text("Kode Barang")),
-                              controller: conKodeBarang,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            TextField(
-                              decoration: InputDecoration(
-                                  border: UnderlineInputBorder(),
-                                  label: Text("Nama Barang")),
-                              controller: conNamaBarang,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            TextField(
-                              decoration: InputDecoration(
-                                  border: UnderlineInputBorder(),
-                                  label: Text("Harga Barang")),
-                              controller: conHargaBarang,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            TextField(
-                              decoration: InputDecoration(
-                                  border: UnderlineInputBorder(),
-                                  label: Text("Stok Barang")),
-                              controller: conStokBarang,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            ElevatedButton(
-                                onPressed: () {
-                                  var kdbarang = conKodeBarang.text;
-                                  var namabarang = conNamaBarang.text;
-                                  int hargabarang =
-                                      int.parse(conHargaBarang.text);
-                                  int stokbarang =
-                                      int.parse(conStokBarang.text);
+        // floatingActionButton: FloatingActionButton(
+        //     child: Icon(Icons.add),
+        //     onPressed: () {
+        //       showDialog(
+        //           context: context,
+        //           builder: (BuildContext context) {
+        //             return AlertDialog(
+        //               title: Text("Tambah Barang"),
+        //               content: Container(
+        //                 child: Column(
+        //                   children: [
+        //                     TextField(
+        //                       decoration: InputDecoration(
+        //                           contentPadding: EdgeInsets.all(10),
+        //                           border: UnderlineInputBorder(),
+        //                           label: Text("Kode Barang")),
+        //                       controller: conKodeBarang,
+        //                     ),
+        //                     SizedBox(
+        //                       height: 5,
+        //                     ),
+        //                     TextField(
+        //                       decoration: InputDecoration(
+        //                           border: UnderlineInputBorder(),
+        //                           label: Text("Nama Barang")),
+        //                       controller: conNamaBarang,
+        //                     ),
+        //                     SizedBox(
+        //                       height: 5,
+        //                     ),
+        //                     TextField(
+        //                       decoration: InputDecoration(
+        //                           border: UnderlineInputBorder(),
+        //                           label: Text("Harga Barang")),
+        //                       controller: conHargaBarang,
+        //                     ),
+        //                     SizedBox(
+        //                       height: 5,
+        //                     ),
+        //                     TextField(
+        //                       decoration: InputDecoration(
+        //                           border: UnderlineInputBorder(),
+        //                           label: Text("Stok Barang")),
+        //                       controller: conStokBarang,
+        //                     ),
+        //                     SizedBox(
+        //                       height: 5,
+        //                     ),
+        //                     ElevatedButton(
+        //                         onPressed: () {
+        //                           var kdbarang = conKodeBarang.text;
+        //                           var namabarang = conNamaBarang.text;
+        //                           int hargabarang =
+        //                               int.parse(conHargaBarang.text);
+        //                           int stokbarang =
+        //                               int.parse(conStokBarang.text);
 
-                                  setState(() {
-                                    Barang newItem = Barang(
-                                        idtoko: currentUser!.uid,
-                                        kdbarang: kdbarang,
-                                        namabarang: namabarang,
-                                        stok: stokbarang,
-                                        harga: hargabarang,
-                                        terjual: 0);
-                                    controller.addItem(kdbarang, newItem);
-                                    Navigator.pop(context);
-
-                            
-                                  });
-                                    refreshPage();
-                                },
-                                child: Text("Tambah Barang"))
-                          ],
-                        ),
-                      ),
-                      actions: [
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text("Tutup"))
-                      ],
-                    );
-                  });
-            }),
+        //                           setState(() {
+        //                             Barang newItem = Barang(
+        //                                 idtoko: currentUser!.uid,
+        //                                 kdbarang: kdbarang,
+        //                                 namabarang: namabarang,
+        //                                 stok: stokbarang,
+        //                                 harga: hargabarang.toDouble(),
+        //                                 terjual: 0);
+        //                             controller.addItem(kdbarang, newItem);
+        //                             Navigator.pop(context);
+        //                           });
+        //                           refreshPage();
+        //                         },
+        //                         child: Text("Tambah Barang"))
+        //                   ],
+        //                 ),
+        //               ),
+        //               actions: [
+        //                 TextButton(
+        //                     onPressed: () {
+        //                       Navigator.pop(context);
+        //                     },
+        //                     child: Text("Tutup"))
+        //               ],
+        //             );
+        //           });
+        //     }),
         body: ListView(children: [
           DataTable(
               showBottomBorder: true,
@@ -308,8 +325,11 @@ class _KocakState extends State<Kocak> {
                                                     kdbarang: kdbarang,
                                                     namabarang: namabarang,
                                                     stok: stokbarang,
-                                                    harga: hargabarang,
-                                                    terjual: terjual);
+                                                    harga:
+                                                        hargabarang.toDouble(),
+                                                    terjual: terjual,
+                                                    urlImage:
+                                                        'defaultbarang.png');
                                                 controller.updateItem(
                                                     conID.text, newItem);
                                               });
@@ -349,7 +369,8 @@ class _KocakState extends State<Kocak> {
                                         child: Text("Batal")),
                                     TextButton(
                                         onPressed: () {
-                                          controller.deleteItem(_barang[index].kdbarang);
+                                          controller.deleteItem(
+                                              _barang[index].kdbarang);
                                           Navigator.of(context).pop();
                                           refreshPage();
                                         },
@@ -369,8 +390,8 @@ class _KocakState extends State<Kocak> {
   }
 
   void refreshPage() {
-   setState(() {
-     _loadUsers();
-   });
+    setState(() {
+      _loadUsers();
+    });
   }
 }

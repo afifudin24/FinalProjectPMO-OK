@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kasir_euy/ClassService.dart/BarangService.dart';
+import 'package:kasir_euy/main.dart';
 import 'komposisi.dart';
 import '../Class/BarangClass.dart';
 
@@ -16,12 +19,14 @@ class _PageViewState extends State<PageViewScreen> {
   final PageController _pageController = PageController(initialPage: 0);
 
   Future<void> _getBarang() async {
-    List<Barang> dtBarang = await barangController.getItems("546");
+    List<Barang> dtBarang =
+        await barangController.getItems(currentUser!.uid.toString());
     dataBarang = dtBarang;
     setState(() {
       dataBarang.sort((a, b) => b.terjual.compareTo(a.terjual));
       vsb = true;
     });
+    print(dataBarang);
   }
 
   int _currentPageIndex = 0;
@@ -52,7 +57,7 @@ class _PageViewState extends State<PageViewScreen> {
         visible: vsb,
         child: PageView.builder(
           controller: _pageController,
-          itemCount: 3,
+          itemCount: 1,
           itemBuilder: (context, index) {
             return elemenPage(dataBarang[index]);
           },
@@ -98,7 +103,14 @@ class _PageViewState extends State<PageViewScreen> {
               width: 130,
               margin: EdgeInsets.only(left: 5, right: 5),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10), color: Colors.green),
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: File(data.urlImage).existsSync()
+                          ? FileImage(File(data.urlImage))
+                              as ImageProvider<Object> // Gambar dari file
+                          : AssetImage('assets/image/default.png')),
+                  color: Colors.green),
             ),
             Container(
                 margin: EdgeInsets.only(left: 5, right: 5),

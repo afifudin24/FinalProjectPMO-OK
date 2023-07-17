@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -10,6 +11,7 @@ import 'package:kasir_euy/Class/MemberClass.dart';
 import 'package:kasir_euy/ClassService.dart/BarangService.dart';
 import 'package:kasir_euy/ClassService.dart/LaporanPemasukanService.dart';
 import 'package:kasir_euy/ClassService.dart/LaporanPenjualanService.dart';
+import 'package:kasir_euy/Layout/komposisi.dart';
 import 'package:kasir_euy/Layout/pageview.dart';
 import 'package:kasir_euy/main.dart';
 
@@ -166,7 +168,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
             Container(
-              width: double.infinity,
+              width: MediaQuery.of(context).size.width * 0.8,
               height: 400,
               child: Center(
                 child: Column(
@@ -287,13 +289,259 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 5,
+            ),
             Container(
+              height: 50,
+              width: MediaQuery.of(context).size.width * 0.8,
+              decoration: BoxDecoration(
+                  color: secondaryColor,
+                  borderRadius: BorderRadius.circular(5)),
+              padding: EdgeInsets.all(10),
+              margin: EdgeInsets.all(15),
+              child: Text(
+                "Grafik Pemasukan",
+                style: GoogleFonts.poppins(fontSize: 20, color: Colors.white),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(10)),
+              margin: EdgeInsets.all(15),
               alignment: Alignment.center,
               height: 200,
-              padding: EdgeInsets.all(2),
-              child: charts.BarChart(
-                _createSampleData(),
-                animate: true,
+              padding: EdgeInsets.all(10),
+              // child: charts.BarChart(
+              //   _createSampleData(),
+              //   animate: true,
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('laporanPemasukan')
+                    .where('idToko', isEqualTo: currentUser!.uid.toString())
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasData) {
+                    print("oke");
+                    List<DocumentSnapshot> documents = snapshot.data!.docs;
+
+                    // Membuat map untuk menyimpan total pemasukan berdasarkan kategori waktu (bulan)
+                    Map<String, int> incomeByMonth = {};
+
+                    // Mengelompokkan dan menghitung total pemasukan berdasarkan bulan
+                    documents.forEach((doc) {
+                      DateTime date = doc['date'].toDate();
+                      String formattedMonth =
+                          '${date.day}/${date.month}/${date.year}';
+
+                      if (incomeByMonth.containsKey(formattedMonth)) {
+                        incomeByMonth[formattedMonth] =
+                            doc['totalHarga'] + incomeByMonth[formattedMonth]!;
+                      } else {
+                        incomeByMonth[formattedMonth] = doc['totalHarga'];
+                      }
+                    });
+
+                    // Membuat series data untuk chart
+                    List<charts.Series<IncomeData, String>> seriesList = [
+                      charts.Series(
+                        id: 'Pemasukan',
+                        colorFn: (_, __) =>
+                            charts.ColorUtil.fromDartColor(secondaryColor),
+                        data: incomeByMonth.entries.map((entry) {
+                          return IncomeData(
+                            category: entry.key,
+                            value: entry.value,
+                          );
+                        }).toList(),
+                        domainFn: (IncomeData data, _) => data.category,
+                        measureFn: (IncomeData data, _) => data.value,
+                        labelAccessorFn: (IncomeData data, _) =>
+                            data.value.toString(),
+                      ),
+                    ];
+
+                    return charts.BarChart(
+                      seriesList,
+                      animate: true,
+                      domainAxis: charts.OrdinalAxisSpec(
+                        renderSpec:
+                            charts.SmallTickRendererSpec(labelRotation: 45),
+                      ),
+                    );
+                  } else {
+                    print("Gak ada Data");
+                    return CircularProgressIndicator();
+                  }
+                },
+              ),
+            ),
+            Container(
+              height: 50,
+              width: MediaQuery.of(context).size.width * 0.8,
+              decoration: BoxDecoration(
+                  color: secondaryColor,
+                  borderRadius: BorderRadius.circular(5)),
+              padding: EdgeInsets.all(10),
+              margin: EdgeInsets.all(15),
+              child: Text(
+                "Grafik Penjualan",
+                style: GoogleFonts.poppins(fontSize: 20, color: Colors.white),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(10)),
+              margin: EdgeInsets.all(15),
+              alignment: Alignment.center,
+              height: 200,
+              padding: EdgeInsets.all(10),
+              // child: charts.BarChart(
+              //   _createSampleData(),
+              //   animate: true,
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('laporanPenjualan')
+                    .where('idToko', isEqualTo: currentUser!.uid.toString())
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasData) {
+                    print("oke");
+                    List<DocumentSnapshot> documents = snapshot.data!.docs;
+
+                    // Membuat map untuk menyimpan total pemasukan berdasarkan kategori waktu (bulan)
+                    Map<String, int> incomeByMonth = {};
+
+                    // Mengelompokkan dan menghitung total pemasukan berdasarkan bulan
+                    documents.forEach((doc) {
+                      DateTime date = doc['date'].toDate();
+                      String formattedMonth =
+                          '${date.day}/${date.month}/${date.year}';
+
+                      if (incomeByMonth.containsKey(formattedMonth)) {
+                        incomeByMonth[formattedMonth] =
+                            doc['totalJual'] + incomeByMonth[formattedMonth]!;
+                      } else {
+                        incomeByMonth[formattedMonth] = doc['totalJual'];
+                      }
+                    });
+
+                    // Membuat series data untuk chart
+                    List<charts.Series<SaleData, String>> seriesList = [
+                      charts.Series(
+                        id: 'Penjualan',
+                        colorFn: (_, __) =>
+                            charts.ColorUtil.fromDartColor(secondaryColor),
+                        data: incomeByMonth.entries.map((entry) {
+                          return SaleData(
+                            category: entry.key,
+                            value: entry.value,
+                          );
+                        }).toList(),
+                        domainFn: (SaleData data, _) => data.category,
+                        measureFn: (SaleData data, _) => data.value,
+                      ),
+                    ];
+
+                    return charts.BarChart(
+                      seriesList,
+                      animate: true,
+                      domainAxis: charts.OrdinalAxisSpec(
+                        renderSpec:
+                            charts.SmallTickRendererSpec(labelRotation: 45),
+                      ),
+                    );
+                  } else {
+                    print("Gak ada Data");
+                    return CircularProgressIndicator();
+                  }
+                },
+              ),
+            ),
+            Container(
+              height: 50,
+              width: MediaQuery.of(context).size.width * 0.8,
+              decoration: BoxDecoration(
+                  color: secondaryColor,
+                  borderRadius: BorderRadius.circular(5)),
+              padding: EdgeInsets.all(10),
+              margin: EdgeInsets.all(15),
+              child: Text(
+                "Grafik Pengeluaran",
+                style: GoogleFonts.poppins(fontSize: 20, color: Colors.white),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(10)),
+              margin: EdgeInsets.all(15),
+              alignment: Alignment.center,
+              height: 200,
+              padding: EdgeInsets.all(10),
+              // child: charts.BarChart(
+              //   _createSampleData(),
+              //   animate: true,
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('laporanPengeluaran')
+                    .where('idToko', isEqualTo: currentUser!.uid.toString())
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasData) {
+                    print("oke");
+                    List<DocumentSnapshot> documents = snapshot.data!.docs;
+
+                    // Membuat map untuk menyimpan total pemasukan berdasarkan kategori waktu (bulan)
+                    Map<String, int> incomeByMonth = {};
+
+                    // Mengelompokkan dan menghitung total pemasukan berdasarkan bulan
+                    documents.forEach((doc) {
+                      DateTime date = doc['date'].toDate();
+                      String formattedMonth =
+                          '${date.day}/${date.month}/${date.year}';
+
+                      if (incomeByMonth.containsKey(formattedMonth)) {
+                        incomeByMonth[formattedMonth] =
+                            doc['totalPengeluaran'] +
+                                incomeByMonth[formattedMonth]!;
+                      } else {
+                        incomeByMonth[formattedMonth] = doc['totalPengeluaran'];
+                      }
+                    });
+
+                    // Membuat series data untuk chart
+                    List<charts.Series<OuterData, String>> seriesList = [
+                      charts.Series(
+                        id: 'Pengeluaran',
+                        colorFn: (_, __) =>
+                            charts.ColorUtil.fromDartColor(secondaryColor),
+                        data: incomeByMonth.entries.map((entry) {
+                          return OuterData(
+                            category: entry.key,
+                            value: entry.value,
+                          );
+                        }).toList(),
+                        domainFn: (OuterData data, _) => data.category,
+                        measureFn: (OuterData data, _) => data.value,
+                      ),
+                    ];
+
+                    return charts.BarChart(
+                      seriesList,
+                      animate: true,
+                      domainAxis: charts.OrdinalAxisSpec(
+                        renderSpec:
+                            charts.SmallTickRendererSpec(labelRotation: 45),
+                      ),
+                    );
+                  } else {
+                    print("Gak ada Data");
+                    return CircularProgressIndicator();
+                  }
+                },
               ),
             ),
           ],
@@ -337,7 +585,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: Icon(
                       ikon as IconData?,
                       size: 30,
-                      color: Colors.green,
+                      color: secondaryColor,
                     ),
                   ),
                   SizedBox(
@@ -425,4 +673,25 @@ class DashboardMenuItem extends StatelessWidget {
       ),
     );
   }
+}
+
+class IncomeData {
+  final String category;
+  final int value;
+
+  IncomeData({required this.category, required this.value});
+}
+
+class SaleData {
+  final String category;
+  final int value;
+
+  SaleData({required this.category, required this.value});
+}
+
+class OuterData {
+  final String category;
+  final int value;
+
+  OuterData({required this.category, required this.value});
 }

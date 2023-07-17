@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kasir_euy/Class/MemberClass.dart';
 import 'package:kasir_euy/ClassService.dart/MemberService.dart';
 import 'package:kasir_euy/ClassService.dart/MemberService.dart';
+import 'package:kasir_euy/Layout/komposisi.dart';
 
 import '../Class/TokoClass.dart';
 
@@ -53,7 +54,9 @@ class _CrudMemberClass extends State<CrudMemberClass> {
     String nonNullableValue = nullableValue != null ? nullableValue : '';
     return Scaffold(
       appBar: AppBar(
-        title: Text('Daftar Pengguna'),
+        title: Text('Daftar Member'),
+        backgroundColor: primaryColor,
+        centerTitle: true,
       ),
       body: buildView(),
       floatingActionButton: FloatingActionButton(
@@ -106,5 +109,3 @@ class _CrudMemberClass extends State<CrudMemberClass> {
     );
   }
 }
-
-

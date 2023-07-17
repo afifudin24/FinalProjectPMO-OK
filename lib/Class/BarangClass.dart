@@ -5,16 +5,19 @@ class Barang {
   String namabarang;
   String idtoko;
   int stok;
-  int harga;
+  double harga;
   int terjual;
+  String urlImage;
 
-  Barang(
-      {required this.kdbarang,
-      required this.namabarang,
-      required this.idtoko,
-      required this.stok,
-      required this.harga,
-      required this.terjual});
+  Barang({
+    required this.kdbarang,
+    required this.namabarang,
+    required this.idtoko,
+    required this.stok,
+    required this.harga,
+    required this.terjual,
+    required this.urlImage,
+  });
   Map<String, dynamic> toMap() {
     return {
       'kdbarang': kdbarang,
@@ -22,7 +25,8 @@ class Barang {
       'idtoko': idtoko,
       'stok': stok,
       'harga': harga,
-      'terjual': terjual
+      'terjual': terjual,
+      'urlImage': urlImage
     };
   }
 
@@ -34,6 +38,7 @@ class Barang {
       stok: map['stok'],
       harga: map['harga'],
       terjual: map['terjual'],
+      urlImage: map['urlImage'],
     );
   }
 }

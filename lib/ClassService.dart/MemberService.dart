@@ -21,7 +21,17 @@ class MemberService {
   Future<List<Member>> getMembersData(String id) async {
     List<Member> memberList = [];
     QuerySnapshot snapshot =
-        await memberCollection.where('idToko', isEqualTo: id).get();
+        await memberCollection.where('idtoko', isEqualTo: id).get();
+    snapshot.docs.forEach((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      memberList.add(Member.fromMap(data));
+    });
+    return memberList;
+  }
+  Future<List<Member>> getMembersDataPilih(String id) async {
+    List<Member> memberList = [];
+    QuerySnapshot snapshot =
+        await memberCollection.where('idMember', isEqualTo: id).get();
     snapshot.docs.forEach((doc) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       memberList.add(Member.fromMap(data));
@@ -35,13 +45,13 @@ class MemberService {
     return documentIds;
   }
 
-  Future<void> addMember(Member member) {
-    String randomId = FirebaseFirestore.instance.collection('member').doc().id;
-    return memberCollection.doc(randomId).set(member.toMap());
+  Future<void> addMember(String id, Member member) {
+    
+    return memberCollection.doc(id).set(member.toMap());
   }
 
-  Future<void> updateMember(Member member) {
-    return memberCollection.doc(member.idMember).update(member.toMap());
+  Future<void> updateMember(String id, Member member) {
+    return memberCollection.doc(id).update(member.toMap());
   }
 
   Future<void> deleteMember(String id) {

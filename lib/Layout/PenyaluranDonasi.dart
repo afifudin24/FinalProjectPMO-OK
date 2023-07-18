@@ -6,6 +6,7 @@ import 'package:kasir_euy/ClassService.dart/PenyaluranDonasiService.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kasir_euy/Layout/HomeScreen.dart';
 import 'package:kasir_euy/Layout/MenuLayout.dart';
+import 'package:kasir_euy/Layout/PenyaluranDonasiData.dart';
 import 'package:kasir_euy/Layout/komposisi.dart';
 import 'package:kasir_euy/main.dart';
 
@@ -140,13 +141,14 @@ class _PenyaluranDonasiState extends State<PenyaluranDonasi> {
                           int jumlah = int.parse(_jumlahController.text);
                           DateTime now = DateTime.now();
                           Timestamp timestamp = Timestamp.fromDate(now);
-
+                            String randomId =
+            FirebaseFirestore.instance.collection('penyalurandonasi').doc().id;
                           PenyaluranDonasiClass donasi = PenyaluranDonasiClass(
                             idtoko: currentUser!.uid.toString(),
                             jumlah: jumlah,
                             tujuan: tujuan,
                             tanggal: timestamp,
-                            urlImage: imageFile != null ? imageFile!.path : '',
+                            urlImage: imageFile != null ? imageFile!.path : '', kdsalur: randomId,
                           );
 
                           salur.addItem(donasi).then((result) {
@@ -160,12 +162,12 @@ class _PenyaluranDonasiState extends State<PenyaluranDonasi> {
                             _jumlahController.clear();
                             _tujuanController.clear();
                             Navigator.pop(context);
-                            // Navigator.pushReplacement(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => HomePage(),
-                            //   ),
-                            // );
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PenyaluranDonasiData(),
+                              ),
+                            );
                           }).catchError((error) {
                             // Mengatur pesan output jika terjadi error
                             setState(() {

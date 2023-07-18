@@ -20,6 +20,17 @@ class PenyaluranDonasiService {
     });
     return penyaluranDonasiList;
   }
+  Future<List<PenyaluranDonasiClass>> getPilihItems(String kd) async {
+    List<PenyaluranDonasiClass> penyaluranDonasiList = [];
+
+    QuerySnapshot snapshot = await penyaluranDonasiCollection.where('kdsalur', isEqualTo: kd).get();
+
+    snapshot.docs.forEach((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      penyaluranDonasiList.add(PenyaluranDonasiClass.fromMap(data));
+    });
+    return penyaluranDonasiList;
+  }
 
   Future<List<PenyaluranDonasiClass>> getDataItems(String id) async {
     List<PenyaluranDonasiClass> penyaluranDonasiList = [];

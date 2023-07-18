@@ -4,6 +4,7 @@ import '../ClassService.dart/PenyaluranDonasiService.dart';
 
 class PenyaluranDonasiClass {
   String idtoko;
+  String kdsalur;
   String tujuan;
   Timestamp tanggal;
   int jumlah;
@@ -11,6 +12,7 @@ class PenyaluranDonasiClass {
 
   PenyaluranDonasiClass({
     required this.idtoko,
+    required this.kdsalur,
     required this.tujuan,
     required this.tanggal,
     required this.jumlah,
@@ -20,6 +22,7 @@ class PenyaluranDonasiClass {
   Map<String, dynamic> toMap() {
     return {
       'idtoko': idtoko,
+      'kdsalur': kdsalur,
       'tujuan': tujuan,
       'tanggal': tanggal,
       'jumlah': jumlah,
@@ -30,6 +33,7 @@ class PenyaluranDonasiClass {
   factory PenyaluranDonasiClass.fromMap(Map<String, dynamic> map) {
     return PenyaluranDonasiClass(
       idtoko: map['idtoko'],
+      kdsalur: map['kdsalur'],
       tujuan: map['tujuan'],
       tanggal: map['tanggal'],
       jumlah: map['jumlah'],

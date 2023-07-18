@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kasir_euy/Layout/MenuLayout.dart';
@@ -37,6 +38,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
   late int _selectedNavbar;
   final TextEditingController conNama = TextEditingController();
   final TextEditingController conEmail = TextEditingController();
@@ -116,6 +118,50 @@ class _HomePageState extends State<HomePage> {
       print(toko[0].adminToko);
       print(namatoko);
     });
+  }
+
+    Future<void> _confirmSignOut() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // dialog is not dismissible by clicking outside of it
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Konfirmasi Keluar'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Apakah anda yakin ingin keluar?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Batal'),
+              onPressed: () {
+                Navigator.of(context).pop(); // close the dialog
+              },
+            ),
+            TextButton(
+              child: const Text('Keluar'),
+              onPressed: () async {
+                try {
+                  await _auth.signOut();
+                  // Navigate back to the login page
+                  Navigator.pushReplacementNamed(context, '/login');
+                } catch (e) {
+                  print('Sign Out Error: $e');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('Failed to sign out. Please try again.'),
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> fetchUsers() async {
@@ -388,17 +434,11 @@ class _HomePageState extends State<HomePage> {
                   Visibility(
                     visible: visibilitasLeading[_selectedNavbar],
                     child: IconButton(
-                      icon: Icon(
-                        Icons.logout,
-                        color: primaryColor,
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
-                        );
-                        // Tombol Log Out ditekan
-                      },
+                     icon: Icon(
+                          Icons.logout,
+                          color: Colors.white,
+                        ),
+                        onPressed: _confirmSignOut,
                     ),
                   ),
                 ],

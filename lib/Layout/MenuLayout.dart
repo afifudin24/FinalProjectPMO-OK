@@ -3,8 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:kasir_euy/Class/DonasiClass.dart';
 import 'package:kasir_euy/Layout/BarangList.dart';
 import 'package:kasir_euy/Layout/DonasiData.dart';
+import 'package:kasir_euy/Layout/LaporanLayout.dart';
 import 'package:kasir_euy/Layout/Memberlayout.dart';
 import 'package:kasir_euy/Layout/PenyaluranDonasi.dart';
+import 'package:kasir_euy/Layout/Supplier/SupplierMenu.dart';
 import 'komposisi.dart';
 import 'PenyaluranDonasiData.dart';
 class KasirMenuPage extends StatelessWidget {
@@ -35,6 +37,18 @@ class KasirMenuPage extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => CrudMemberClass()),
+      );
+    }
+    void pindahLaporan() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Laporan()),
+      );
+    }
+    void pindahSupplier() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SupplierMenu()),
       );
     }
 

@@ -52,10 +52,9 @@ class PenyaluranDonasiService {
     return documentIds;
   }
 
-  Future<void> addItem(PenyaluranDonasiClass item) {
-    String randomId =
-        FirebaseFirestore.instance.collection('penyalurandonasi').doc().id;
-    return penyaluranDonasiCollection.doc(randomId).set(item.toMap());
+  Future<void> addItem(String id, PenyaluranDonasiClass item) {
+   
+    return penyaluranDonasiCollection.doc(id).set(item.toMap());
   }
 
   Future<void> updateItem(PenyaluranDonasiClass item) {

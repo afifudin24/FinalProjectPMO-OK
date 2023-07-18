@@ -19,6 +19,8 @@ class _PenyaluranDonasiDataState extends State<PenyaluranDonasiData> {
   PenyaluranDonasiService penyaluranDonasiController =
       PenyaluranDonasiService();
   List<PenyaluranDonasiClass> _donasi = [];
+  List<PenyaluranDonasiClass> _donasiPilih = [];
+
   List<String> _id = [];
 
   @override
@@ -41,7 +43,7 @@ class _PenyaluranDonasiDataState extends State<PenyaluranDonasiData> {
     List<PenyaluranDonasiClass> donasis =
         await penyaluranDonasiController.getPilihItems(kd);
     setState(() {
-      _donasi = donasis;
+      _donasiPilih = donasis;
     });
     showDialog(
       context: context,
@@ -164,8 +166,8 @@ class _PenyaluranDonasiDataState extends State<PenyaluranDonasiData> {
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                   penyaluranDonasiController
-                                      .deleteItem(_id[index])
-                                      .then((value) {
+                                      .deleteItem(donasi.kdsalur)
+                                      .then((result) {
                                     print("oke");
                                   }).catchError((onError) {
                                     print(onError);

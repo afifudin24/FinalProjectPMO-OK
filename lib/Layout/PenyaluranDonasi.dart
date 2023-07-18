@@ -151,7 +151,7 @@ class _PenyaluranDonasiState extends State<PenyaluranDonasi> {
                             urlImage: imageFile != null ? imageFile!.path : '', kdsalur: randomId,
                           );
 
-                          salur.addItem(donasi).then((result) {
+                          salur.addItem(randomId, donasi).then((result) {
                             print("oke");
                             // Mengatur pesan output
                             ScaffoldMessenger.of(context).showSnackBar(

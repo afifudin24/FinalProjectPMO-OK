@@ -28,7 +28,7 @@ class Toko {
       'adminToko': adminToko,
       'urlImage': urlImage,
       'alamat': alamat,
-      'saldo': saldo.toDouble(),
+      'saldo': saldo,
     };
   }
 
@@ -41,7 +41,7 @@ class Toko {
       adminToko: map['adminToko'],
       urlImage: map['urlImage'],
       alamat: map['alamat'],
-      saldo: (map['saldo'] as int).toDouble(),
+      saldo: map['saldo'],
     );
   }
 }

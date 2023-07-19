@@ -247,10 +247,6 @@ class _BeliBarangSupplierState extends State<BeliBarangSupplier> {
         print('Data tidak ada');
       }
     });
-    // print(currentUser!.uid.toString());
-    // var toko;
-    // var saldo;
-    // var saldoTerkini;
 
     // List<Toko> tokoPilih =
     //     await tokoController.getDataItems(currentUser!.uid.toString());

@@ -136,38 +136,10 @@ class _LaporanState extends State<Laporan> {
               child: Column(
                 children: [
                   SingleChildScrollView(
-                    child: DataTable(
-                        showBottomBorder: true,
-                        // columnSpacing: 20,
-                        columns: const [
-                          DataColumn(
-                            label: Center(
-                              child: Text(
-                                "Kd Brg",
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                          DataColumn(label: Center(child: Text("Tanggal"))),
-                          DataColumn(label: Center(child: Text("Nama Barang"))),
-                          DataColumn(
-                              label: Center(child: Text("Jumlah Terjual"))),
-                        ],
-                        rows: []),
-                  ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.6,
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom:
-                                  BorderSide(width: 1, color: Colors.grey))),
-                      child: SingleChildScrollView(
-                        child: DataTable(
+                    child: FittedBox(
+                      child: DataTable(
                           showBottomBorder: true,
-                          // columnSpacing: 70,
-                          headingRowHeight: 0,
+                          // columnSpacing: 20,
                           columns: const [
                             DataColumn(
                               label: Center(
@@ -183,38 +155,72 @@ class _LaporanState extends State<Laporan> {
                             DataColumn(
                                 label: Center(child: Text("Jumlah Terjual"))),
                           ],
-                          rows:
-                              List<DataRow>.generate(penjualan.length, (index) {
-                            DateTime tanggal = penjualan[index].date.toDate();
-                            String waktu =
-                                '${tanggal.day}/${tanggal.month}/${tanggal.year}';
-                            return DataRow(cells: [
-                              DataCell(Center(
-                                child: Text(
-                                  penjualan[index].kdbarang.toString(),
+                          rows: []),
+                    ),
+                  ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.6,
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom:
+                                  BorderSide(width: 1, color: Colors.grey))),
+                      child: SingleChildScrollView(
+                        child: FittedBox(
+                          child: DataTable(
+                            showBottomBorder: true,
+                            // columnSpacing: 70,
+                            headingRowHeight: 0,
+                            columns: const [
+                              DataColumn(
+                                label: Center(
+                                  child: Text(
+                                    "Kd Brg",
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
-                              )),
-                              DataCell(
-                                Center(child: Text(waktu)),
                               ),
-                              DataCell(Center(
-                                child: Text(penjualan[index].namaBarang),
-                              )),
-                              DataCell(Center(
-                                child:
-                                    Text(penjualan[index].totalJual.toString()),
-                              )),
-                            ]);
-                          }),
+                              DataColumn(label: Center(child: Text("Tanggal"))),
+                              DataColumn(
+                                  label: Center(child: Text("Nama Barang"))),
+                              DataColumn(
+                                  label: Center(child: Text("Jumlah Terjual"))),
+                            ],
+                            rows: List<DataRow>.generate(penjualan.length,
+                                (index) {
+                              DateTime tanggal = penjualan[index].date.toDate();
+                              String waktu =
+                                  '${tanggal.day}/${tanggal.month}/${tanggal.year}';
+                              return DataRow(cells: [
+                                DataCell(Center(
+                                  child: Text(
+                                    penjualan[index].kdbarang.toString(),
+                                  ),
+                                )),
+                                DataCell(
+                                  Center(child: Text(waktu)),
+                                ),
+                                DataCell(Center(
+                                  child: Text(penjualan[index].namaBarang),
+                                )),
+                                DataCell(Center(
+                                  child: Text(
+                                      penjualan[index].totalJual.toString()),
+                                )),
+                              ]);
+                            }),
+                          ),
                         ),
                       ),
                     ),
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 10,
                   ),
                   Container(
-                    height: 45,
+                    height: 35,
+                    padding: EdgeInsets.all(5),
                     alignment: Alignment.center,
                     margin: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -224,7 +230,7 @@ class _LaporanState extends State<Laporan> {
                       'Total Terjual : $totalTerjual',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 30.0,
+                        fontSize: 20.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -242,17 +248,20 @@ class _LaporanState extends State<Laporan> {
               // height: MediaQuery.of(context).size.height * 0.6,
               child: Column(
                 children: [
-                  DataTable(
-                      showBottomBorder: true,
-                      // columnSpacing: 20,
-                      columns: const [
-                        DataColumn(label: Center(child: Text("No"))),
-                        DataColumn(label: Center(child: Text("Tanggal"))),
-                        // DataColumn(label: Center(child: Text("Transaksi"))),
-                        DataColumn(label: Center(child: Text("Jumlah Barang"))),
-                        DataColumn(label: Center(child: Text("Total harga"))),
-                      ],
-                      rows: []),
+                  FittedBox(
+                    child: DataTable(
+                        showBottomBorder: true,
+                        // columnSpacing: 20,
+                        columns: const [
+                          DataColumn(label: Center(child: Text("No"))),
+                          DataColumn(label: Center(child: Text("Tanggal"))),
+                          // DataColumn(label: Center(child: Text("Transaksi"))),
+                          DataColumn(
+                              label: Center(child: Text("Jumlah Barang"))),
+                          DataColumn(label: Center(child: Text("Total harga"))),
+                        ],
+                        rows: []),
+                  ),
                   SingleChildScrollView(
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.6,
@@ -296,10 +305,11 @@ class _LaporanState extends State<Laporan> {
                     ),
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 10,
                   ),
                   Container(
-                    height: 45,
+                    height: 35,
+                    padding: EdgeInsets.all(5),
                     alignment: Alignment.center,
                     margin: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -309,12 +319,11 @@ class _LaporanState extends State<Laporan> {
                       'Total Pemasukan : $totalmasuk',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 30.0,
+                        fontSize: 20.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  SizedBox(height: 16.0),
                 ],
               ),
             ),
@@ -388,10 +397,11 @@ class _LaporanState extends State<Laporan> {
                     ),
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 10,
                   ),
                   Container(
-                    height: 45,
+                    height: 35,
+                    padding: EdgeInsets.all(5),
                     alignment: Alignment.center,
                     margin: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -401,7 +411,7 @@ class _LaporanState extends State<Laporan> {
                       'Total Pengeluaran : $totalkeluar',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 30.0,
+                        fontSize: 20.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

@@ -10,7 +10,9 @@ import '../ClassService.dart/TokoService.dart';
 import 'DashboardPage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'LoginPage.dart';
+import 'Registerpage.dart';
 import 'TransaksiPage.dart';
+
 import '../main.dart';
 import 'editprofil.dart';
 import 'komposisi.dart';
@@ -26,11 +28,27 @@ String alamat = "";
 String mottotoko = "";
 String emailtoko = "";
 
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: HomePage(),
+      routes: {
+        '/login': (context) => LoginPage(),
+        '/register': (context) => RegisterPage(),
+        '/home': (context) => HomePage(),
+      },
+    );
+  }
+}
+
 // ignore: must_be_immutable
 class HomePage extends StatefulWidget {
   final int laman;
   final Function? MyFunction;
-  // ignore: non_constant_identifier_names
+
   HomePage({super.key, this.laman = 0, this.MyFunction});
 
   @override
@@ -38,7 +56,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   late int _selectedNavbar;
   final TextEditingController conNama = TextEditingController();
   final TextEditingController conEmail = TextEditingController();
@@ -64,6 +82,7 @@ class _HomePageState extends State<HomePage> {
 
   void initState() {
     super.initState();
+
     _selectedNavbar = widget.laman;
     fetchUsers();
     // _getUser();
@@ -83,26 +102,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  // void dispose() {
-  //   conNama.dispose();
-  //   conEmail.dispose();
-  //   conMotto.dispose();
-  //   conNamaToko.dispose();
-  //   super.dispose();
-  // }
-
-  //   Future<void> _simpan() async {
-  //   List<Toko> tokoIni = await tokoController.getDataItems(currentUser!.uid.toString());
-  //   setState(() {
-  //     toko = tokoIni;
-  //     var admin = toko[0].adminToko;
-  //     title[0] = "Selamat datang, $admin";
-  //     namatoko = toko[0].namatoko;
-  //     print(toko[0].adminToko);
-  //     print(namatoko);
-  //   });
-  // }
-
   Future<void> _getUser() async {
     List<Toko> tokoIni =
         await tokoController.getDataItems(currentUser!.uid.toString());
@@ -120,10 +119,28 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-    Future<void> _confirmSignOut() async {
+  void signOut(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      // Pindahkan pengguna kembali ke halaman login atau halaman awal aplikasi
+      // Misalnya:
+      final snackBar = SnackBar(
+        content: Text('Logout berhasil!'),
+        duration: Duration(seconds: 2), // Atur durasi tampilan Snackbar
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+    } catch (e) {
+      print("Error during logout: $e");
+      // Atur pesan kesalahan atau tindakan lain sesuai kebutuhan
+    }
+  }
+
+  Future<void> _confirmSignOut() async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // dialog is not dismissible by clicking outside of it
+      barrierDismissible:
+          false, // dialog is not dismissible by clicking outside of it
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Konfirmasi Keluar'),
@@ -142,22 +159,10 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             TextButton(
-              child: const Text('Keluar'),
-              onPressed: () async {
-                try {
-                  await _auth.signOut();
-                  // Navigate back to the login page
-                  Navigator.pushReplacementNamed(context, '/login');
-                } catch (e) {
-                  print('Sign Out Error: $e');
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('Failed to sign out. Please try again.'),
-                    ),
-                  );
-                }
-              },
-            ),
+                child: const Text('Keluar'),
+                onPressed: () {
+                  signOut(context);
+                }),
           ],
         );
       },
@@ -177,8 +182,9 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           visRumah = true;
           visLengkap = false;
+          _getUser();
         });
-        _getUser();
+        // _getUser();
 
         print('Data ada');
       } else {
@@ -434,11 +440,11 @@ class _HomePageState extends State<HomePage> {
                   Visibility(
                     visible: visibilitasLeading[_selectedNavbar],
                     child: IconButton(
-                     icon: Icon(
-                          Icons.logout,
-                          color: Colors.white,
-                        ),
-                        onPressed: _confirmSignOut,
+                      icon: Icon(
+                        Icons.logout,
+                        color: Colors.white,
+                      ),
+                      onPressed: _confirmSignOut,
                     ),
                   ),
                 ],

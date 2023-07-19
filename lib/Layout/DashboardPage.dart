@@ -55,16 +55,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
   //saldo
   var saldos = [];
 
-  double saldo = 0;
+  double saldo = 0.0;
   @override
   void initState() {
     super.initState();
-    // _loadUsers();
+    _loadUsers();
     _getJual();
     _getStok();
     _getMember();
     // _getSaldo();
-    print(currentUser!.uid.toString());
   }
 
   Future<void> _loadUsers() async {
@@ -72,6 +71,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         await controller.getDataItems(currentUser!.uid.toString());
     setState(() {
       namaAdmin = tokos[0].adminToko;
+      saldo = tokos[0].saldo;
 
       print(tokos[0].adminToko);
       print(tokos[0].urlImage);
@@ -120,33 +120,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       saldo = _saldo[0].saldo;
       print(saldo);
     });
-  }
-
-  List<charts.Series<SalesData, String>> _createSampleData() {
-    final data = [
-      SalesData('Jan', 30),
-      SalesData('Feb', 25),
-      SalesData('Mar', 40),
-      SalesData('Apr', 45),
-      SalesData('May', 50),
-      SalesData('Jun', 55),
-      SalesData('Jul', 30),
-      SalesData('Aug', 25),
-      SalesData('Sep', 40),
-      SalesData('Okt', 45),
-      SalesData('Nov', 50),
-      SalesData('Des', 55),
-    ];
-
-    return [
-      charts.Series<SalesData, String>(
-        id: 'Sales',
-        domainFn: (SalesData sales, _) => sales.month,
-        measureFn: (SalesData sales, _) => sales.amount,
-        data: data,
-        labelAccessorFn: (SalesData sales, _) => '${sales.amount}',
-      ),
-    ];
   }
 
   @override
@@ -319,6 +292,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('laporanPemasukan')
+                    .orderBy('date', descending: false)
                     .where('idToko', isEqualTo: currentUser!.uid.toString())
                     .snapshots(),
                 builder: (BuildContext context,
@@ -405,6 +379,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('laporanPenjualan')
+                    .orderBy('date', descending: false)
                     .where('idToko', isEqualTo: currentUser!.uid.toString())
                     .snapshots(),
                 builder: (BuildContext context,
@@ -488,6 +463,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('laporanPengeluaran')
+                    .orderBy('date', descending: false)
                     .where('idToko', isEqualTo: currentUser!.uid.toString())
                     .snapshots(),
                 builder: (BuildContext context,

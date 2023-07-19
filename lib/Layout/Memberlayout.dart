@@ -19,7 +19,7 @@ class CrudMemberClass extends StatefulWidget {
 class _CrudMemberClass extends State<CrudMemberClass> {
   TextEditingController idcon = TextEditingController();
   TextEditingController emailcon = TextEditingController();
-  TextEditingController nama= TextEditingController();
+  TextEditingController nama = TextEditingController();
   TextEditingController alamat = TextEditingController();
   TextEditingController telepon = TextEditingController();
   MemberService controller = MemberService();
@@ -38,20 +38,19 @@ class _CrudMemberClass extends State<CrudMemberClass> {
 
   Future<void> _loadUsers() async {
     print("lah");
-    List<Member> members = await controller.getMembersData(currentUser!.uid.toString());
+    List<Member> members =
+        await controller.getMembersData(currentUser!.uid.toString());
     setState(() {
       _member = members;
     });
   }
-
-
 
   int getItemCount() {
     return _member.length; // Mengembalikan panjang data sebagai jumlah item
   }
 
   Future<void> _loadData(String kd) async {
-    List<Member> memberList= await controller.getMembersDataPilih(kd);
+    List<Member> memberList = await controller.getMembersDataPilih(kd);
     setState(() {
       _memberpilih = memberList;
       idcon.text = _memberpilih[0].idMember;
@@ -80,13 +79,15 @@ class _CrudMemberClass extends State<CrudMemberClass> {
         centerTitle: true,
         backgroundColor: primaryColor,
       ),
-      body:(){
-        if(_member.length > 0){
+      body: () {
+        if (_member.length > 0) {
           return buildView(context);
-        }else{
-          return Center(child: Text("Belum ada data"),);
+        } else {
+          return Center(
+            child: Text("Belum ada data"),
+          );
         }
-      } (),
+      }(),
       floatingActionButton: FloatingActionButton(
         backgroundColor: primaryColor,
         child: Icon(Icons.add),
@@ -94,122 +95,129 @@ class _CrudMemberClass extends State<CrudMemberClass> {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Tambah Member'),
-        content:Container
-        (height: 300,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-             TextField(
-            decoration: InputDecoration(
-              label: Text("ID Member"),
-              border: OutlineInputBorder(           
-              ),
-            ),
-            controller: idcon, 
-          ),
-          SizedBox(height: 10.0),
-          TextField(
-            decoration: InputDecoration(
-              label: Text("Email"),
-              border: OutlineInputBorder(           
-              ),
-            ),
-            controller: emailcon, 
-          ),
-          SizedBox(height: 10.0),
-          TextField(
-            decoration: InputDecoration(
-              label: Text("Nama"),
-              border: OutlineInputBorder(           
-              ),
-            ),
-            controller: nama, 
-          ),
-          SizedBox(height: 10.0),
-          TextField(
-            decoration: InputDecoration(
-              label: Text("Alamat"),
-              border: OutlineInputBorder(           
-              ),
-            ),
-            controller: alamat, 
-          ),
-          SizedBox(height: 10.0),
-          TextField(
-            decoration: InputDecoration(
-              label: Text("Telepon"),
-              border: OutlineInputBorder(           
-              ),
-            ),
-            controller: telepon, 
-          ),
-        ],),),
-
-        actions: [
-          ElevatedButton.icon(
-            style: ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll(Colors.green)
-            ),
-            onPressed: (){
-            
-              // String randomId = FirebaseFirestore.instance.collection('member').doc().id;
-            Member newItem = Member(
-              idtoko: currentUser!.uid.toString(),
-                idMember: idcon.text,
-                email: emailcon.text,
-                nama: nama.text,
-                alamat: alamat.text,
-                telepon: telepon.text);
-
-            controller.addMember(idcon.text, newItem).then((value) {
-              refreshPage();
-              Navigator.pop(context);
-           
-              print('Berhasil Tambah');
-             
-              showDialog(context: context, builder: (BuildContext context) { 
-                return AlertDialog(
-                  title: Text("Berhasil"),
-                  content: Container(
-                    height: 150,
-                    width: 100,
+              return AlertDialog(
+                title: Text('Tambah Member'),
+                content: Container(
+                  height: 350,
+                  child: Container(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.check_circle_outline, color: Colors.blue, size: 50,)
-                        ,
-                        SizedBox(height: 20,),
-                        Center(
-                          child: Text("Berhasil Tambah Data"),
+                        TextField(
+                          decoration: InputDecoration(
+                            label: Text("ID Member"),
+                            border: OutlineInputBorder(),
+                          ),
+                          controller: idcon,
+                        ),
+                        SizedBox(height: 10.0),
+                        TextField(
+                          decoration: InputDecoration(
+                            label: Text("Email"),
+                            border: OutlineInputBorder(),
+                          ),
+                          controller: emailcon,
+                        ),
+                        SizedBox(height: 10.0),
+                        TextField(
+                          decoration: InputDecoration(
+                            label: Text("Nama"),
+                            border: OutlineInputBorder(),
+                          ),
+                          controller: nama,
+                        ),
+                        SizedBox(height: 10.0),
+                        TextField(
+                          decoration: InputDecoration(
+                            label: Text("Alamat"),
+                            border: OutlineInputBorder(),
+                          ),
+                          controller: alamat,
+                        ),
+                        SizedBox(height: 10.0),
+                        TextField(
+                          decoration: InputDecoration(
+                            label: Text("Telepon"),
+                            border: OutlineInputBorder(),
+                          ),
+                          controller: telepon,
                         ),
                       ],
                     ),
                   ),
-                );
-               }, );
-              print('ok');
-            }).catchError((onError) {
-              print("Gagal");
-            });
-            print("okey");
-           
-            // refreshPage();
+                ),
+                actions: [
+                  ElevatedButton.icon(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStatePropertyAll(Colors.green)),
+                      onPressed: () {
+                        // String randomId = FirebaseFirestore.instance.collection('member').doc().id;
+                        Member newItem = Member(
+                            idtoko: currentUser!.uid.toString(),
+                            idMember: idcon.text,
+                            email: emailcon.text,
+                            nama: nama.text,
+                            alamat: alamat.text,
+                            telepon: telepon.text);
 
-        
-          }, icon: Icon(Icons.add), label: Text("Tambah")),
-          ElevatedButton.icon(
-            style: ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll(Colors.red)
-            ),
-            onPressed: (){
-            Navigator.pop(context);
-          }, icon: Icon(Icons.close_sharp), label: Text("Batal")),
-        ],
-      );
-    },
-  );
+                        controller.addMember(idcon.text, newItem).then((value) {
+                          refreshPage();
+                          Navigator.pop(context);
+
+                          print('Berhasil Tambah');
+
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Berhasil"),
+                                content: Container(
+                                  height: 150,
+                                  width: 100,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.check_circle_outline,
+                                        color: Colors.blue,
+                                        size: 50,
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Center(
+                                        child: Text("Berhasil Tambah Data"),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                          print('ok');
+                        }).catchError((onError) {
+                          print("Gagal");
+                        });
+                        print("okey");
+
+                        // refreshPage();
+                      },
+                      icon: Icon(Icons.add),
+                      label: Text("Tambah")),
+                  ElevatedButton.icon(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStatePropertyAll(Colors.red)),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(Icons.close_sharp),
+                      label: Text("Batal")),
+                ],
+              );
+            },
+          );
           // setState(() {
           //   Member newItem = Member(
           //       idMember: '128klk3gjh',
@@ -240,9 +248,11 @@ class _CrudMemberClass extends State<CrudMemberClass> {
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                icon: Icon(Icons.delete, color: Colors.red,),
+                icon: Icon(
+                  Icons.delete,
+                  color: Colors.red,
+                ),
                 onPressed: () {
-                 
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -250,153 +260,164 @@ class _CrudMemberClass extends State<CrudMemberClass> {
                         title: Text('Yakin Ingin Menghapus Data?'),
                         // content: Text('Ya'),
                         // content: Text('Tidak'),
-                        actions:[
+                        actions: [
                           TextButton(
                             child: Text('Ya'),
                             onPressed: () {
                               controller.deleteMember(member.idMember);
-                  _loadUsers();
-                    Navigator.of(context).pop(); 
-                              },
-                              ),
+                              _loadUsers();
+                              Navigator.of(context).pop();
+                            },
+                          ),
                           TextButton(
                             child: Text('Tidak'),
                             onPressed: () {
                               Navigator.of(context).pop(); // Menutup dialog
-                              },
-                              ),
-                              ],
-                              );
-                              },
-                              );
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
                   // refreshPage();
                 },
               ),
               IconButton(
-                icon: Icon(Icons.edit, color: Colors.green,),
-                onPressed: () {
-                  _loadData(member.idMember);
-                    showDialog(
-            context: context,
-            builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Update Member'),
-        content:Container
-        (height: 300,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-          TextField(
-            decoration: InputDecoration(
-              label: Text("ID Member"),
-              border: OutlineInputBorder(           
-              ),
-            ),
-            controller: idcon, 
-          ),
-          SizedBox(height: 10.0),
-          TextField(
-            decoration: InputDecoration(
-              label: Text("Email"),
-              border: OutlineInputBorder(           
-              ),
-            ),
-            controller: emailcon, 
-          ),
-          SizedBox(height: 10.0),
-          TextField(
-            decoration: InputDecoration(
-              label: Text("Nama"),
-              border: OutlineInputBorder(           
-              ),
-            ),
-            controller: nama, 
-          ),
-          SizedBox(height: 10.0),
-          TextField(
-            decoration: InputDecoration(
-              label: Text("Alamat"),
-              border: OutlineInputBorder(           
-              ),
-            ),
-            controller: alamat, 
-          ),
-          SizedBox(height: 10.0),
-          TextField(
-            decoration: InputDecoration(
-              label: Text("Telepon"),
-              border: OutlineInputBorder(           
-              ),
-            ),
-            controller: telepon, 
-          ),
-        ],),),
-    
-        actions: [
-          ElevatedButton.icon(
-            style: ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll(Colors.green)
-            ),onPressed: (){
-            
-            Member newItem = Member(
-              idtoko: currentUser!.uid.toString(),
-                idMember: member.idMember,
-                email: emailcon.text,
-                nama: nama.text,
-                alamat: alamat.text,
-                telepon: telepon.text);
-    
-            controller.updateMember(member.idMember.toString(), newItem).then((value) {
-              refreshPage();
-              Navigator.pop(context);
-
-              print('Berhasil Update');
-              showDialog(context: context, builder: (BuildContext context) { 
-                return AlertDialog(
-                  title: Text("Berhasil"),
-                  content: Container(
-                    height: 100,
-                    width: 100,
-                    child: Center(
-                      child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.check_circle_outline, color: Colors.blue, size: 50,)
-                        ,
-                        SizedBox(height: 20,),
-                        Center(
-                          child: Text("Berhasil Update Data"),
-                        ),
-                      ],
-                    ),
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.green,
                   ),
-                  )
-                );
-               }, );
+                  onPressed: () {
+                    _loadData(member.idMember);
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Update Member'),
+                            content: Container(
+                              height: 350,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  TextField(
+                                    decoration: InputDecoration(
+                                      label: Text("ID Member"),
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    controller: idcon,
+                                  ),
+                                  SizedBox(height: 10.0),
+                                  TextField(
+                                    decoration: InputDecoration(
+                                      label: Text("Email"),
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    controller: emailcon,
+                                  ),
+                                  SizedBox(height: 10.0),
+                                  TextField(
+                                    decoration: InputDecoration(
+                                      label: Text("Nama"),
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    controller: nama,
+                                  ),
+                                  SizedBox(height: 10.0),
+                                  TextField(
+                                    decoration: InputDecoration(
+                                      label: Text("Alamat"),
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    controller: alamat,
+                                  ),
+                                  SizedBox(height: 10.0),
+                                  TextField(
+                                    decoration: InputDecoration(
+                                      label: Text("Telepon"),
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    controller: telepon,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            actions: [
+                              ElevatedButton.icon(
+                                  style: ButtonStyle(
+                                      backgroundColor: MaterialStatePropertyAll(
+                                          Colors.green)),
+                                  onPressed: () {
+                                    Member newItem = Member(
+                                        idtoko: currentUser!.uid.toString(),
+                                        idMember: member.idMember,
+                                        email: emailcon.text,
+                                        nama: nama.text,
+                                        alamat: alamat.text,
+                                        telepon: telepon.text);
 
-            }).catchError((onError) {
-              print("Gagal");
-            });
-            print("okey");
-           
-            // refreshPage();
-    
-        
-          }, icon: Icon(Icons.edit), label: Text("Update")),
-          ElevatedButton.icon(
-            style: ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll(Colors.red)
-            ),
-            onPressed: (){
-            Navigator.pop(context);
-          }, icon: Icon(Icons.close_sharp), label: Text("Batal")),
-        ],
-      );
-                 
-                }
-                    );
-                }
-              ),
+                                    controller
+                                        .updateMember(
+                                            member.idMember.toString(), newItem)
+                                        .then((value) {
+                                      refreshPage();
+                                      Navigator.pop(context);
+
+                                      print('Berhasil Update');
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                              title: Text("Berhasil"),
+                                              content: Container(
+                                                height: 100,
+                                                width: 100,
+                                                child: Center(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Icon(
+                                                        Icons
+                                                            .check_circle_outline,
+                                                        color: Colors.blue,
+                                                        size: 50,
+                                                      ),
+                                                      SizedBox(
+                                                        height: 20,
+                                                      ),
+                                                      Center(
+                                                        child: Text(
+                                                            "Berhasil Update Data"),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ));
+                                        },
+                                      );
+                                    }).catchError((onError) {
+                                      print("Gagal");
+                                    });
+                                    print("okey");
+
+                                    // refreshPage();
+                                  },
+                                  icon: Icon(Icons.edit),
+                                  label: Text("Update")),
+                              ElevatedButton.icon(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStatePropertyAll(Colors.red)),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  icon: Icon(Icons.close_sharp),
+                                  label: Text("Batal")),
+                            ],
+                          );
+                        });
+                  }),
             ],
           ),
         );
@@ -405,16 +426,13 @@ class _CrudMemberClass extends State<CrudMemberClass> {
   }
 
   void refreshPage() {
-       _loadUsers();
-       setState(() {
-       idcon.clear();
-       emailcon.clear();
-       nama.clear();
-       alamat.clear();
-       telepon.clear();
-       });
-       
+    _loadUsers();
+    setState(() {
+      idcon.clear();
+      emailcon.clear();
+      nama.clear();
+      alamat.clear();
+      telepon.clear();
+    });
   }
 }
-
-

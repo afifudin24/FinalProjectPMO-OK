@@ -30,10 +30,9 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(
-        // title: Text('Login'),
+      // title: Text('Login'),
       // ),
-      body: 
-      Container(
+      body: Container(
         color: Color.fromRGBO(33, 64, 100, 1),
         child: Padding(
           padding: EdgeInsets.all(16.0),
@@ -45,9 +44,9 @@ class _LoginPageState extends State<LoginPage> {
                   transformAlignment: Alignment.center,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      //color: Color.fromRGBO(33, 64, 100, 1)
-                      ),
+                    borderRadius: BorderRadius.circular(10),
+                    //color: Color.fromRGBO(33, 64, 100, 1)
+                  ),
                   child: Visibility(
                       visible: visibilitas,
                       child: SizedBox(
@@ -72,29 +71,28 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: 10,
               ),
-              Text('LOGIN',
-                
-              style: TextStyle(
-                fontSize: 50,
-                color: Colors.white,
-              ),
+              Text(
+                'LOGIN',
+                style: TextStyle(
+                  fontSize: 50,
+                  color: Colors.white,
+                ),
               ),
               SizedBox(height: 70.0),
               Image.asset(
                 "assets/image/kasir.png",
                 height: 150,
                 width: 150,
-                ),
-                SizedBox(height: 30.0),
-
+              ),
+              SizedBox(height: 30.0),
               TextField(
                 controller: _usernameController,
                 decoration: InputDecoration(
-                  fillColor: Colors.white, 
+                  fillColor: Colors.white,
                   // Mengubah warna latar belakang TextField
                   filled: true,
                   border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(12)), 
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
                   ),
                   labelText: 'E-mail',
                 ),
@@ -104,37 +102,36 @@ class _LoginPageState extends State<LoginPage> {
                 controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
-                  fillColor: Colors.white, 
+                  fillColor: Colors.white,
                   // Mengubah warna latar belakang TextField
                   filled: true,
                   border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(12)), 
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
                   ),
                   labelText: 'Password',
                 ),
               ),
               SizedBox(height: 16.0),
               ElevatedButton(
-                onPressed: _login,
-                child: Text('Login'),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: Size(150, 50),
-                  primary: Colors.amber,
-                )
-              ),
+                  onPressed: _login,
+                  child: Text('Login'),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(150, 50),
+                    primary: Colors.amber,
+                  )),
               SizedBox(
                 height: 10,
               ),
-              GestureDetector(onTap: (){
-                   Navigator.pushReplacementNamed(context, '/register');
-              },
-              child: Text(
-                "Belum punya akun?",
-                
-              style: TextStyle(
-                color: Colors.white,
-              ),
-              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushReplacementNamed(context, '/register');
+                },
+                child: Text(
+                  "Belum punya akun?",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
               )
             ],
           ),
@@ -201,24 +198,13 @@ class _LoginPageState extends State<LoginPage> {
       if (isLoggedIn) {
         // Simpan status login jika berhasil
         await _saveLoginStatus(true);
-        // Navigasi ke halaman beranda
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Login Berhasil"),
-              content: Text("Mantap Kak"),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            );
-          },
+        final snackBar = SnackBar(
+          content: Text('Login berhasil!'),
+          duration: Duration(seconds: 2), // Atur durasi tampilan Snackbar
         );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        // Navigasi ke halaman beranda
+
         Navigator.pushReplacementNamed(context, '/home');
       } else {
         showDialog(

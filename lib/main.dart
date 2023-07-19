@@ -12,9 +12,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'Layout/LoginPage.dart';
 import 'firebase_options.dart';
 import 'Proses/CekProfil.dart';
+import 'Layout/HomeScreen.dart';
 import 'Layout/Pageview.dart';
 
 FirebaseAuth _auth = FirebaseAuth.instance;
+
 User? currentUser = _auth.currentUser as User?;
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 Future<void> saveLoginStatus(bool isLoggedIn) async {
@@ -73,8 +75,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        routes: {
+          '/login': (context) => LoginPage(),
+          '/register': (context) => RegisterPage(),
+          '/home': (context) => HomePage(),
+          '/cek': (context) => Cek(),
+          '/oke': (context) => FormInfo(),
+        },
         debugShowCheckedModeBanner: false,
-        // home: HomePage(),
         home: AnimatedSplashScreen(
           splashIconSize: MediaQuery.of(context).size.height,
           splash: Scaffold(
@@ -200,10 +208,9 @@ class Tentukan extends StatelessWidget {
       routes: {
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
-        '/home': (context) => HomePage(),
+        '/home': (context) => HomeScreen(),
         '/cek': (context) => Cek(),
         '/oke': (context) => FormInfo(),
-        // '/tunggu': (context) => Tunggu(),
       },
     );
   }

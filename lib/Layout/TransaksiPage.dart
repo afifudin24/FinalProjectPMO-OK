@@ -8,10 +8,12 @@ import 'package:kasir_euy/Class/LaporanPemasukanClass.dart';
 import 'package:kasir_euy/Layout/AddTransaksi.dart';
 import '../Class/BarangClass.dart';
 import '../Class/LaporanPenjualanClass.dart';
+import '../Class/MemberClass.dart';
 import '../Class/TokoClass.dart';
 import '../ClassService.dart/BarangService.dart';
 import '../ClassService.dart/LaporanPemasukanService.dart';
 import '../ClassService.dart/LaporanPenjualanService.dart';
+import '../ClassService.dart/MemberService.dart';
 import '../ClassService.dart/TokoService.dart';
 import 'Donasilayout.dart';
 import 'komposisi.dart';
@@ -45,9 +47,10 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
   double totalbayar = 0;
   double kembalian = 0;
   String pdfFile = " ";
+  double diskon = 0;
   var lokasi;
   @override
-  var kodemember = false;
+  bool kodemember = false;
   List<Map<String, dynamic>?> daftarBarang = [];
 
   List namaBarang = [];
@@ -70,21 +73,36 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
   TextEditingController conQTY = TextEditingController();
   TextEditingController qtyPilihController = TextEditingController();
   TextEditingController conStok = TextEditingController();
+  TextEditingController kdmemberCon = TextEditingController();
   TextEditingController _nominal = TextEditingController();
   final FocusNode _qtyfocusNode = FocusNode();
   final FocusNode _kdfocusNode = FocusNode();
   TokoService tokoController = TokoService();
   BarangService barangController = BarangService();
+  MemberService memberController = MemberService();
   LaporanPemasukanService pemasukanController = LaporanPemasukanService();
   LaporanPenjualanService penjualanController = LaporanPenjualanService();
   List<Barang> barangData = [];
   List<Barang> dataBarang = [];
+  List<Member> memberpilih = [];
   int? hargaPer;
   Future<void> _getBarang() async {
     List<Barang> barangs =
         await barangController.getItems(currentUser!.uid.toString());
     setState(() {
       dataBarang = barangs;
+    });
+  }
+
+  void dispose() {
+    qtyPilihController.dispose();
+    kdmemberCon.dispose();
+    super.dispose();
+  }
+
+  void cekMember(BuildContext context) {
+    setState(() {
+      kodemember != kodemember;
     });
   }
 
@@ -99,6 +117,18 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
         ttlHarga = hrg * qty;
         stok = barangData[0].stok;
         conStok.text = barangData[0].stok.toString();
+      });
+    }
+  }
+
+  Future<void> _getMember(String kd) async {
+    List<Member> member = await memberController.getMembersDataPilih(kd);
+    print(member);
+    if (member.length > 0) {
+      setState(() {
+        diskon = totalSeluruhHarga * 0.1;
+        totalSeluruhHarga = (totalSeluruhHarga - diskon);
+        print(totalSeluruhHarga);
       });
     }
   }
@@ -944,7 +974,7 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
                         onPressed: () {
                           print(stok);
                           print(conStok.text);
-                          if (int.parse(conStok.text) > qty) {
+                          if (int.parse(conStok.text) >= qty) {
                             setState(() {
                               _tambahKeDaftar(conKdBarang.text, namaBrg, hrg,
                                   ttlHarga, qty);
@@ -1125,10 +1155,18 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
                   ),
                 ),
                 Visibility(
-                  visible: false,
+                  visible: true,
                   child: Container(
                     width: 150,
                     child: TextField(
+                      controller: kdmemberCon,
+                      onChanged: (value) {
+                        setState(() {
+                          _getMember(value);
+                        });
+
+                        print(diskon);
+                      },
                       decoration: InputDecoration(
                           label: Text("Kode Member"),
                           border: OutlineInputBorder()),
@@ -1144,7 +1182,11 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
                           style: ButtonStyle(
                               backgroundColor:
                                   MaterialStatePropertyAll(Colors.amber)),
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              cekMember(context);
+                            });
+                          },
                           child: Text("Kode Member")),
                     ),
                     Container(
@@ -1156,6 +1198,8 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
                                   MaterialStatePropertyAll(Colors.green)),
                           onPressed: () {
                             setState(() {
+                              totalSeluruhHarga =
+                                  (totalSeluruhHarga! - diskon)!;
                               totalbayar = double.parse(_nominal.text);
                               kembalian = double.parse(_nominal.text) -
                                   totalSeluruhHarga!;

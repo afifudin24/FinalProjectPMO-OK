@@ -95,126 +95,128 @@ class _CrudMemberClass extends State<CrudMemberClass> {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Tambah Member'),
-                content: Container(
-                  height: 350,
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextField(
-                          decoration: InputDecoration(
-                            label: Text("ID Member"),
-                            border: OutlineInputBorder(),
+              return SingleChildScrollView(
+                child: AlertDialog(
+                  title: Text('Tambah Member'),
+                  content: Container(
+                    height: 350,
+                    child: Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextField(
+                            decoration: InputDecoration(
+                              label: Text("ID Member"),
+                              border: OutlineInputBorder(),
+                            ),
+                            controller: idcon,
                           ),
-                          controller: idcon,
-                        ),
-                        SizedBox(height: 10.0),
-                        TextField(
-                          decoration: InputDecoration(
-                            label: Text("Email"),
-                            border: OutlineInputBorder(),
+                          SizedBox(height: 10.0),
+                          TextField(
+                            decoration: InputDecoration(
+                              label: Text("Email"),
+                              border: OutlineInputBorder(),
+                            ),
+                            controller: emailcon,
                           ),
-                          controller: emailcon,
-                        ),
-                        SizedBox(height: 10.0),
-                        TextField(
-                          decoration: InputDecoration(
-                            label: Text("Nama"),
-                            border: OutlineInputBorder(),
+                          SizedBox(height: 10.0),
+                          TextField(
+                            decoration: InputDecoration(
+                              label: Text("Nama"),
+                              border: OutlineInputBorder(),
+                            ),
+                            controller: nama,
                           ),
-                          controller: nama,
-                        ),
-                        SizedBox(height: 10.0),
-                        TextField(
-                          decoration: InputDecoration(
-                            label: Text("Alamat"),
-                            border: OutlineInputBorder(),
+                          SizedBox(height: 10.0),
+                          TextField(
+                            decoration: InputDecoration(
+                              label: Text("Alamat"),
+                              border: OutlineInputBorder(),
+                            ),
+                            controller: alamat,
                           ),
-                          controller: alamat,
-                        ),
-                        SizedBox(height: 10.0),
-                        TextField(
-                          decoration: InputDecoration(
-                            label: Text("Telepon"),
-                            border: OutlineInputBorder(),
+                          SizedBox(height: 10.0),
+                          TextField(
+                            decoration: InputDecoration(
+                              label: Text("Telepon"),
+                              border: OutlineInputBorder(),
+                            ),
+                            controller: telepon,
                           ),
-                          controller: telepon,
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                actions: [
-                  ElevatedButton.icon(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStatePropertyAll(Colors.green)),
-                      onPressed: () {
-                        // String randomId = FirebaseFirestore.instance.collection('member').doc().id;
-                        Member newItem = Member(
-                            idtoko: currentUser!.uid.toString(),
-                            idMember: idcon.text,
-                            email: emailcon.text,
-                            nama: nama.text,
-                            alamat: alamat.text,
-                            telepon: telepon.text);
-
-                        controller.addMember(idcon.text, newItem).then((value) {
-                          refreshPage();
-                          Navigator.pop(context);
-
-                          print('Berhasil Tambah');
-
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text("Berhasil"),
-                                content: Container(
-                                  height: 150,
-                                  width: 100,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.check_circle_outline,
-                                        color: Colors.blue,
-                                        size: 50,
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Center(
-                                        child: Text("Berhasil Tambah Data"),
-                                      ),
-                                    ],
+                  actions: [
+                    ElevatedButton.icon(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStatePropertyAll(Colors.green)),
+                        onPressed: () {
+                          // String randomId = FirebaseFirestore.instance.collection('member').doc().id;
+                          Member newItem = Member(
+                              idtoko: currentUser!.uid.toString(),
+                              idMember: idcon.text,
+                              email: emailcon.text,
+                              nama: nama.text,
+                              alamat: alamat.text,
+                              telepon: telepon.text);
+              
+                          controller.addMember(idcon.text, newItem).then((value) {
+                            refreshPage();
+                            Navigator.pop(context);
+              
+                            print('Berhasil Tambah');
+              
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Berhasil"),
+                                  content: Container(
+                                    height: 150,
+                                    width: 100,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.check_circle_outline,
+                                          color: Colors.blue,
+                                          size: 50,
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Center(
+                                          child: Text("Berhasil Tambah Data"),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                          );
-                          print('ok');
-                        }).catchError((onError) {
-                          print("Gagal");
-                        });
-                        print("okey");
-
-                        // refreshPage();
-                      },
-                      icon: Icon(Icons.add),
-                      label: Text("Tambah")),
-                  ElevatedButton.icon(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStatePropertyAll(Colors.red)),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(Icons.close_sharp),
-                      label: Text("Batal")),
-                ],
+                                );
+                              },
+                            );
+                            print('ok');
+                          }).catchError((onError) {
+                            print("Gagal");
+                          });
+                          print("okey");
+              
+                          // refreshPage();
+                        },
+                        icon: Icon(Icons.add),
+                        label: Text("Tambah")),
+                    ElevatedButton.icon(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStatePropertyAll(Colors.red)),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(Icons.close_sharp),
+                        label: Text("Batal")),
+                  ],
+                ),
               );
             },
           );
@@ -292,129 +294,131 @@ class _CrudMemberClass extends State<CrudMemberClass> {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('Update Member'),
-                            content: Container(
-                              height: 350,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  TextField(
-                                    decoration: InputDecoration(
-                                      label: Text("ID Member"),
-                                      border: OutlineInputBorder(),
+                          return SingleChildScrollView(
+                            child: AlertDialog(
+                              title: Text('Update Member'),
+                              content: Container(
+                                height: 350,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    TextField(
+                                      decoration: InputDecoration(
+                                        label: Text("ID Member"),
+                                        border: OutlineInputBorder(),
+                                      ),
+                                      controller: idcon,
                                     ),
-                                    controller: idcon,
-                                  ),
-                                  SizedBox(height: 10.0),
-                                  TextField(
-                                    decoration: InputDecoration(
-                                      label: Text("Email"),
-                                      border: OutlineInputBorder(),
+                                    SizedBox(height: 10.0),
+                                    TextField(
+                                      decoration: InputDecoration(
+                                        label: Text("Email"),
+                                        border: OutlineInputBorder(),
+                                      ),
+                                      controller: emailcon,
                                     ),
-                                    controller: emailcon,
-                                  ),
-                                  SizedBox(height: 10.0),
-                                  TextField(
-                                    decoration: InputDecoration(
-                                      label: Text("Nama"),
-                                      border: OutlineInputBorder(),
+                                    SizedBox(height: 10.0),
+                                    TextField(
+                                      decoration: InputDecoration(
+                                        label: Text("Nama"),
+                                        border: OutlineInputBorder(),
+                                      ),
+                                      controller: nama,
                                     ),
-                                    controller: nama,
-                                  ),
-                                  SizedBox(height: 10.0),
-                                  TextField(
-                                    decoration: InputDecoration(
-                                      label: Text("Alamat"),
-                                      border: OutlineInputBorder(),
+                                    SizedBox(height: 10.0),
+                                    TextField(
+                                      decoration: InputDecoration(
+                                        label: Text("Alamat"),
+                                        border: OutlineInputBorder(),
+                                      ),
+                                      controller: alamat,
                                     ),
-                                    controller: alamat,
-                                  ),
-                                  SizedBox(height: 10.0),
-                                  TextField(
-                                    decoration: InputDecoration(
-                                      label: Text("Telepon"),
-                                      border: OutlineInputBorder(),
+                                    SizedBox(height: 10.0),
+                                    TextField(
+                                      decoration: InputDecoration(
+                                        label: Text("Telepon"),
+                                        border: OutlineInputBorder(),
+                                      ),
+                                      controller: telepon,
                                     ),
-                                    controller: telepon,
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                            actions: [
-                              ElevatedButton.icon(
-                                  style: ButtonStyle(
-                                      backgroundColor: MaterialStatePropertyAll(
-                                          Colors.green)),
-                                  onPressed: () {
-                                    Member newItem = Member(
-                                        idtoko: currentUser!.uid.toString(),
-                                        idMember: member.idMember,
-                                        email: emailcon.text,
-                                        nama: nama.text,
-                                        alamat: alamat.text,
-                                        telepon: telepon.text);
-
-                                    controller
-                                        .updateMember(
-                                            member.idMember.toString(), newItem)
-                                        .then((value) {
-                                      refreshPage();
-                                      Navigator.pop(context);
-
-                                      print('Berhasil Update');
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                              title: Text("Berhasil"),
-                                              content: Container(
-                                                height: 100,
-                                                width: 100,
-                                                child: Center(
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Icon(
-                                                        Icons
-                                                            .check_circle_outline,
-                                                        color: Colors.blue,
-                                                        size: 50,
-                                                      ),
-                                                      SizedBox(
-                                                        height: 20,
-                                                      ),
-                                                      Center(
-                                                        child: Text(
-                                                            "Berhasil Update Data"),
-                                                      ),
-                                                    ],
+                              actions: [
+                                ElevatedButton.icon(
+                                    style: ButtonStyle(
+                                        backgroundColor: MaterialStatePropertyAll(
+                                            Colors.green)),
+                                    onPressed: () {
+                                      Member newItem = Member(
+                                          idtoko: currentUser!.uid.toString(),
+                                          idMember: member.idMember,
+                                          email: emailcon.text,
+                                          nama: nama.text,
+                                          alamat: alamat.text,
+                                          telepon: telepon.text);
+                          
+                                      controller
+                                          .updateMember(
+                                              member.idMember.toString(), newItem)
+                                          .then((value) {
+                                        refreshPage();
+                                        Navigator.pop(context);
+                          
+                                        print('Berhasil Update');
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                                title: Text("Berhasil"),
+                                                content: Container(
+                                                  height: 100,
+                                                  width: 100,
+                                                  child: Center(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Icon(
+                                                          Icons
+                                                              .check_circle_outline,
+                                                          color: Colors.blue,
+                                                          size: 50,
+                                                        ),
+                                                        SizedBox(
+                                                          height: 20,
+                                                        ),
+                                                        Center(
+                                                          child: Text(
+                                                              "Berhasil Update Data"),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                              ));
-                                        },
-                                      );
-                                    }).catchError((onError) {
-                                      print("Gagal");
-                                    });
-                                    print("okey");
-
-                                    // refreshPage();
-                                  },
-                                  icon: Icon(Icons.edit),
-                                  label: Text("Update")),
-                              ElevatedButton.icon(
-                                  style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStatePropertyAll(Colors.red)),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  icon: Icon(Icons.close_sharp),
-                                  label: Text("Batal")),
-                            ],
+                                                ));
+                                          },
+                                        );
+                                      }).catchError((onError) {
+                                        print("Gagal");
+                                      });
+                                      print("okey");
+                          
+                                      // refreshPage();
+                                    },
+                                    icon: Icon(Icons.edit),
+                                    label: Text("Update")),
+                                ElevatedButton.icon(
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStatePropertyAll(Colors.red)),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    icon: Icon(Icons.close_sharp),
+                                    label: Text("Batal")),
+                              ],
+                            ),
                           );
                         });
                   }),

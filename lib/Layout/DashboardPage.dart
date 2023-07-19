@@ -142,124 +142,129 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: 400,
+              width: MediaQuery.of(context).size.width ,
+              padding: EdgeInsets.all(10),
+              height:350,
               child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 2, right: 2),
-                          child: InkWell(
-                            onHover: (bool value) {
-                              print("oke");
-                              setState(() {
-                                isHovered1 = value;
-                              });
-                            },
-                            onTap: () {
-                              print("hah");
-                            },
-                            child: AnimatedContainer(
-                              duration: Duration(milliseconds: 200),
-                              child: SizedBox(
-                                  height: 200,
-                                  width: 200,
-                                  child: DashboardItem(
-                                      value: stokBarang.toString(),
-                                      ikon: Icons.shopping_cart,
-                                      komponen: "Stok Barang",
-                                      hover: isHovered1)),
+                child: Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                     
+                            margin: EdgeInsets.only(left: 2, right: 2),
+                            child: InkWell(
+                              onHover: (bool value) {
+                                print("oke");
+                                setState(() {
+                                  isHovered1 = value;
+                                });
+                              },
+              
+                              onTap: () {
+                                print("hah");
+                              },
+                              child: AnimatedContainer(
+                                duration: Duration(milliseconds: 200),
+                                child: SizedBox(
+                                    height: 150,
+                                    width: 150,
+                                    child: DashboardItem(
+                                        value: stokBarang.toString(),
+                                        ikon: Icons.shopping_cart,
+                                        komponen: "Stok Barang",
+                                        hover: isHovered1)),
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 2, right: 2),
-                          child: InkWell(
-                            onHover: (bool value) {
-                              print("oke");
-                              setState(() {
-                                isHovered2 = value;
-                              });
-                            },
-                            onTap: () {
-                              print("hah");
-                            },
-                            child: AnimatedContainer(
-                              duration: Duration(milliseconds: 200),
-                              child: SizedBox(
-                                  height: 200,
-                                  width: 200,
-                                  child: DashboardItem(
-                                      value: penjualan.toString(),
-                                      ikon: Icons.check_circle,
-                                      komponen: "Barang Terjual",
-                                      hover: isHovered2)),
+                          Container(
+                            margin: EdgeInsets.only(left: 2, right: 2),
+                            child: InkWell(
+                              onHover: (bool value) {
+                                print("oke");
+                                setState(() {
+                                  isHovered2 = value;
+                                });
+                              },
+                              onTap: () {
+                                print("hah");
+                              },
+                              child: AnimatedContainer(
+                                duration: Duration(milliseconds: 200),
+                                child: SizedBox(
+                                    height: 150,
+                                    width: 150,
+                                    child: DashboardItem(
+                                        value: penjualan.toString(),
+                                        ikon: Icons.check_circle,
+                                        komponen: "Barang Terjual",
+                                        hover: isHovered2)),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 2, right: 2),
-                          child: InkWell(
-                            onHover: (bool value) {
-                              print("oke");
-                              setState(() {
-                                isHovered3 = value;
-                              });
-                            },
-                            onTap: () {
-                              print("hah");
-                            },
-                            child: AnimatedContainer(
-                              duration: Duration(milliseconds: 200),
-                              child: SizedBox(
-                                  height: 200,
-                                  width: 200,
-                                  child: DashboardItem(
-                                      value: member.toString(),
-                                      ikon: Icons.person,
-                                      komponen: "Member",
-                                      hover: isHovered3)),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(left: 2, right: 2),
+                            child: InkWell(
+                              onHover: (bool value) {
+                                print("oke");
+                                setState(() {
+                                  isHovered3 = value;
+                                });
+                              },
+                              onTap: () {
+                                print("hah");
+                              },
+                              child: AnimatedContainer(
+                                duration: Duration(milliseconds: 200),
+                                child: SizedBox(
+                                    height: 150,
+                                    width: 150,
+                                    child: DashboardItem(
+                                        value: member.toString(),
+                                        ikon: Icons.person,
+                                        komponen: "Member",
+                                        hover: isHovered3)),
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 2, right: 2),
-                          child: InkWell(
-                            onHover: (bool value) {
-                              print("oke");
-                              setState(() {
-                                isHovered4 = value;
-                              });
-                            },
-                            onTap: () {
-                              print("hah");
-                            },
-                            child: AnimatedContainer(
-                              duration: Duration(milliseconds: 200),
-                              child: SizedBox(
-                                  height: 200,
-                                  width: 200,
-                                  child: DashboardItem(
-                                      value: saldo.toString(),
-                                      ikon: Icons.account_balance_wallet_sharp,
-                                      komponen: "Saldo",
-                                      hover: isHovered4)),
+                          Container(
+                            margin: EdgeInsets.only(left: 2, right: 2),
+                            child: InkWell(
+                              onHover: (bool value) {
+                                print("oke");
+                                setState(() {
+                                  isHovered4 = value;
+                                });
+                              },
+                              onTap: () {
+                                print("hah");
+                              },
+                              child: AnimatedContainer(
+                                duration: Duration(milliseconds: 200),
+                                child: SizedBox(
+                                    height: 150,
+                                    width: 150,
+                                    child: DashboardItem(
+                                        value: saldo.toString(),
+                                        ikon: Icons.account_balance_wallet_sharp,
+                                        komponen: "Saldo",
+                                        hover: isHovered4)),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    )
-                  ],
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -537,6 +542,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return AnimatedContainer(
       duration: Duration(milliseconds: 1000),
       child: Container(
+        height: 300,
+        width: 300,
         margin: EdgeInsets.all(2),
         decoration: BoxDecoration(
             boxShadow: [
